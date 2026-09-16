@@ -430,7 +430,7 @@ var BK_COLS=[
  {id:'lesson',h:'Class',full:'Ski lessons'},
  {id:'flight',h:'Flight',full:'Flights'},
  {id:'transfer',h:'Coach',full:'Airport transfer'},
- {id:'paid',h:'Paid',full:'Room share paid'}
+ {id:'paid',h:'\u00a31k',full:'\u00a31,000 upfront paid'}
 ];
 function bkPeople(){return (S.people||[]).filter(function(p){return p.a==='yes'})}
 function renderBook(){
@@ -472,8 +472,8 @@ var GROUP_TASKS=[
   w:'Out Saturday 9 January, back Saturday 16th. Saturday is changeover day across the Alps, so the cheap seats go first and finding ten together gets harder every week.'},
  {id:'transfer',t:'Book the airport transfer',d:'As soon as flights are ticketed',
   w:'Ben\u2019s Bus, Geneva to Val Thorens, around \u00a385 return with about 10% off at 8\u201312 people. It has to wait for the flight times, but do not let it drift \u2014 Saturday coaches sell out.'},
- {id:'money',t:'Collect the room money',d:'October',
-  w:'\u00a3789 a head for the apartment. Everything we spend out there goes in the trip Tricount: <a href=\"https://tricount.com/tROsFZkHBPiGNGoDKT\" target=\"_blank\" rel=\"noopener\">open it here</a> \u2014 everyone should join before we go.'},
+ {id:'money',t:'Collect \u00a31,000 from everyone',d:'Sunday 20 September',
+  w:'\u00a31,000 each now, ~\u00a3500 in mid-October, against an estimated ~\u00a31,500 per person (apartment, flights, coach, hire, lift pass). Tick each person in the \u00a31k column of the Bookings tab. Everything spent out there goes in the <a href="https://tricount.com/tROsFZkHBPiGNGoDKT" target="_blank" rel="noopener">trip Tricount</a>.'},
  {id:'lessons',t:'Book group lessons',d:'Mid-November',
   w:'Most of us are beginner or early intermediate. Schools cap group lessons at eight, so six or more of us means two groups \u2014 and ESF advise booking January lessons before mid-December.'},
  {id:'passes',t:'Buy the lift passes',d:'October, when sales open',
@@ -490,7 +490,7 @@ var MY_TASKS=[
   w:'Covers state healthcare in France, free from the NHS, takes a couple of weeks to arrive. It does not cover mountain rescue or getting you home, so it is not a substitute for insurance.'},
  {id:'insurance',t:'Get winter-sports cover',d:'By December',
   w:'Plenty of standard travel policies exclude skiing. Check yours covers on-piste injury, mountain rescue and repatriation. Carr\u00e9 Neige, sold alongside the lift pass, covers rescue cheaply but is a top-up, not a replacement.'},
- {id:'pay',t:'Pay your share of the room',d:'October',w:'\u00a3789 each, then join the trip Tricount so the week\u2019s spending splits itself: <a href=\"https://tricount.com/tROsFZkHBPiGNGoDKT\" target=\"_blank\" rel=\"noopener\">tricount.com</a>.'}
+ {id:'pay',t:'Send Jason \u00a31,000 upfront',d:'By Sunday 20 September',hot:1,w:'Covers the apartment and most of the flights Jason is booking for everyone. The remaining ~\u00a3500 follows in mid-October when lift passes go on sale; exact numbers settle in the Tricount.'}
 ];
 var MYKEY='ski2027.explorer.mytasks.v1';
 function myTasks(){try{return JSON.parse(localStorage.getItem(MYKEY))||{}}catch(e){return{}}}
