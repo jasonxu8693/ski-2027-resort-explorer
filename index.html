@@ -126,14 +126,14 @@ html.gsap .sheet{animation:none}
 </div>
 <div class="sec"><h3>Lift passes · on sale from October</h3>
 <div class="card"><h3>3 Vallées · adult 18–74</h3>
-<div class="kv"><span>4 hours</span><span>€75.10</span></div>
-<div class="kv"><span>1 day</span><span>€84.20</span></div>
-<div class="kv"><span>2 days</span><span>€168.40</span></div>
-<div class="kv"><span>3 days</span><span>€252.60</span></div>
-<div class="kv"><span>4 days</span><span>€336.80</span></div>
-<div class="kv"><span><b>5 days + 1 free</b></span><span><b>€421.00</b></span></div>
-<p class="note"><b>The sixth day is free, which changes the maths.</b> A 4-day pass saves only €84 on the full six days, so for anyone who will ski most of the week the 6-day pass is the obvious buy. It is only the true first-timers — two days on the free carpets, then the half-price EasyRider pass — for whom a full pass is money wasted.</p>
-<p class="note">Tariff from the lift company sheet Jason shared on 16 September; the sheet does not print the season, so check the price when sales open.</p>
+<div class="kv"><span>4 hours</span><span>£64</span></div>
+<div class="kv"><span>1 day</span><span>£72</span></div>
+<div class="kv"><span>2 days</span><span>£143</span></div>
+<div class="kv"><span>3 days</span><span>£215</span></div>
+<div class="kv"><span>4 days</span><span>£286</span></div>
+<div class="kv"><span><b>5 days + 1 free</b></span><span><b>£357</b></span></div>
+<p class="note"><b>The sixth day is free, which changes the maths.</b> A 4-day pass saves only £71 on the full six days, so for anyone who will ski most of the week the 6-day pass is the obvious buy. It is only the true first-timers — two days on the free carpets, then the half-price EasyRider pass — for whom a full pass is money wasted.</p>
+<p class="note">Tariff from the lift company sheet Jason shared on 16 September, priced there in euros (€421 for six days) and converted at €1 = £0.85. The sheet does not print the season, so check the price when sales open.</p>
 </div></div>
 </section>
 <section class="panel" id="p5">
@@ -426,11 +426,11 @@ function renderAll(){renderTable();renderCounts();renderCost('a');renderCost('b'
 /* ---- bookings tracker ---- */
 var BK_COLS=[
  {id:'accom',h:'Room',full:'Accommodation',cost:'\u00a3789'},
- {id:'hire',h:'Hire',full:'Ski hire',cost:'\u20ac120'},
- {id:'pass',h:'Pass',full:'Lift pass',cost:'\u20ac421'},
- {id:'lesson',h:'Class',full:'Ski lessons',cost:'~\u20ac280'},
+ {id:'hire',h:'Hire',full:'Ski hire',cost:'~\u00a3100'},
+ {id:'pass',h:'Pass',full:'Lift pass',cost:'\u00a3357'},
+ {id:'lesson',h:'Class',full:'Ski lessons',cost:'~\u00a3240'},
  {id:'flight',h:'Flight',full:'Flights',cost:'~\u00a3100'},
- {id:'transfer',h:'Coach',full:'Airport transfer',cost:'\u20ac160'},
+ {id:'transfer',h:'Coach',full:'Airport transfer',cost:'\u00a3136'},
  {id:'paid',h:'\u00a31k',full:'\u00a31,000 upfront paid',cost:'\u00a31,000'}
 ];
 var HIRE_DAYS={'Sarah':4,'Jason V':4,'Angie':4};
@@ -456,7 +456,7 @@ function renderBook(){
  }).join('')+'</tr></tfoot>';
  t.innerHTML=h;
  var sm=document.getElementById('bkSummary');
- if(sm)sm.textContent=(parts.length?'Still open: '+parts.join(' \u00b7 ')+'.':'Everyone is sorted for everything.')+' Hire is 6 days, except 4 days for '+Object.keys(HIRE_DAYS).join(', ')+'. Costs are rough per-person figures: the room is priced at ten, hire and passes are adult 6-day rates, flights are an estimate, and lessons only apply to anyone taking them.';
+ if(sm)sm.textContent=(parts.length?'Still open: '+parts.join(' \u00b7 ')+'.':'Everyone is sorted for everything.')+' Hire is 6 days, except 4 days for '+Object.keys(HIRE_DAYS).join(', ')+'. Costs are rough per-person figures in pounds (euro prices converted at 0.85): the room is priced at ten, hire and passes are adult 6-day rates, flights are an estimate, and lessons only apply to anyone taking them.';
 }
 document.addEventListener('click',function(e){
  var b=e.target.closest&&e.target.closest('[data-bk]');if(!b)return;
@@ -481,7 +481,7 @@ var GROUP_TASKS=[
  {id:'lessons',t:'Book group lessons',d:'Mid-November',
   w:'Most of us are beginner or early intermediate. Schools cap group lessons at eight, so six or more of us means two groups \u2014 and ESF advise booking January lessons before mid-December.'},
  {id:'passes',t:'Buy the lift passes',d:'October, when sales open',
-  w:'Sales open in October. The 3 Vall\u00e9es 6-day adult pass is \u20ac421 and the sixth day is free, so a 4-day pass only saves \u20ac84 \u2014 anyone skiing most of the week should just buy the six. The exception is true first-timers: two days on the free carpets, then the half-price EasyRider pass. Tick each person off in the Bookings tab.'},
+  w:'Sales open in October. The 3 Vall\u00e9es 6-day adult pass is about \u00a3357 and the sixth day is free, so a 4-day pass only saves about \u00a371 \u2014 anyone skiing most of the week should just buy the six. The exception is true first-timers: two days on the free carpets, then the half-price EasyRider pass. Tick each person off in the Bookings tab.'},
  {id:'dinners',t:'Book the meals worth booking',d:'December',
   w:'La Fruiti\u00e8re at the Folie Douce runs two sittings and fills up. Le Rendez-Vous takes online bookings and can seat ten on the snow front.'}
 ];
