@@ -124,13 +124,197 @@ html:not(.motion-off) .rail-card:active{transform:scale(.975)}html:not(.motion-o
 /* ---- mobile sheet grip (drag down or tap to close) ---- */
 .sheet-grip{display:none}
 @media(max-width:800px){.sheet-grip{display:grid;place-items:start center;position:absolute;left:0;right:64px;top:0;height:44px;z-index:2;border:0;background:transparent;touch-action:none;cursor:grab;padding-top:8px}.sheet-grip i{display:block;width:44px;height:5px;border-radius:99px;background:#ffffffe0;box-shadow:0 1px 4px #0b2b4066}.sheet-grip:focus-visible{outline-offset:-4px}}
+
+/* ==== ski story (24 Sep): snow, snowboarder, gondola, chapters ==== */
+.snow{position:fixed;inset:0;z-index:5;pointer-events:none;width:100%;height:100%}
+html.solid-top .topbar{background:#0b2233f2;box-shadow:0 1px 0 #ffffff14}
+@supports (backdrop-filter:blur(8px)){html.solid-top .topbar{background:#0b2233d9;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}}
+.topbar{transition:background .3s}
+.rider-lane{position:fixed;left:0;right:0;bottom:11vh;height:130px;z-index:5;pointer-events:none;overflow:hidden;opacity:calc(1 - var(--journey,0)*3)}
+.rider{position:absolute;left:0;bottom:6px;width:108px;height:108px;animation:rideX 10s linear infinite;will-change:transform}
+.rider svg{width:100%;height:100%;display:block;overflow:visible;animation:rideCarve 10s ease-in-out infinite;transform-origin:50% 82%}
+.rider .spray circle{fill:#fff;opacity:0;animation:spray .7s linear infinite}
+.rider .spray circle:nth-child(2){animation-delay:.18s}.rider .spray circle:nth-child(3){animation-delay:.35s}.rider .spray circle:nth-child(4){animation-delay:.52s}
+@keyframes rideX{0%{transform:translate(-170px,-34px)}70%{transform:translate(calc(100vw + 60px),26px)}100%{transform:translate(calc(100vw + 60px),26px)}}
+@keyframes rideCarve{0%,70%,100%{transform:translateY(0) rotate(0)}8%{transform:translateY(-8px) rotate(9deg)}19%{transform:translateY(9px) rotate(-11deg)}31%{transform:translateY(-7px) rotate(10deg)}43%{transform:translateY(9px) rotate(-10deg)}55%{transform:translateY(-6px) rotate(8deg)}66%{transform:translateY(6px) rotate(-6deg)}}
+@keyframes spray{0%{opacity:.95;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(-26px,-14px) scale(.3)}}
+html.motion-off .snow,html.motion-off .rider-lane{display:none}
+@media(prefers-reduced-motion:reduce){.snow,.rider-lane{display:none}}
+@media(max-width:800px){.rider-lane{bottom:10vh;height:100px}.rider{width:80px;height:80px}}
+
+.gondola-track{position:relative;z-index:4;height:260svh}
+.g-stage{position:sticky;top:0;height:100svh;overflow:hidden}
+.g-svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.g-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:var(--gphoto,0);pointer-events:none}
+.g-cap{position:absolute;left:8%;top:21%;max-width:460px;color:#fff;opacity:var(--gcap,0);transform:translateY(calc((1 - var(--gcap,0))*18px));pointer-events:none}
+.g-cap .kicker{font-size:12px;letter-spacing:.24em;text-transform:uppercase;font-weight:700;margin:0 0 12px;text-shadow:0 1px 3px #06263a,0 2px 14px #06263a}
+.g-cap h2{font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:clamp(42px,5.4vw,78px);letter-spacing:-.045em;line-height:1;margin:0 0 12px;text-shadow:0 2px 24px #06263acc}
+.g-cap p{margin:0;font-size:16px;line-height:1.5;text-shadow:0 1px 3px #06263a,0 2px 14px #06263a}
+@media(max-width:800px){.gondola-track{height:230svh}.g-cap{left:24px;right:24px;top:13%}}
+
+.chapter{position:relative;z-index:6}
+.chapter .kicker{font-size:12px;letter-spacing:.24em;text-transform:uppercase;font-weight:700;margin:0 0 14px}
+.ch-head{max-width:1180px;margin:0 auto;padding:11vh 32px 6vh}
+.ch-head h2{font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:clamp(40px,5vw,74px);letter-spacing:-.045em;line-height:1.02;margin:0 0 18px;max-width:17ch}
+.ch-head .lede{font-size:18px;line-height:1.62;max-width:62ch;margin:0}
+.ch-facts{display:flex;flex-wrap:wrap;gap:18px 44px;margin:34px 0 0;padding:0}
+.ch-facts div{margin:0}
+.ch-facts dt{font-family:Georgia,'Times New Roman',serif;font-size:clamp(30px,3.3vw,46px);line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.ch-facts dd{margin:8px 0 0;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:650}
+
+.stay{background:#f3f7fa;color:#102a3b;padding:0 0 12vh}
+.stay .kicker{color:#1d57b0}
+.stay .ch-head .lede{color:#3a5162}
+.stay .ch-facts dd{color:#46596a}
+.drift{position:absolute;left:0;right:0;top:-56px;height:58px;pointer-events:none}
+.drift svg{width:100%;height:100%;display:block}
+.ch-body{max-width:1180px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:56px}
+.ch-media{position:sticky;top:92px;height:calc(100svh - 128px);align-self:start}
+.frame{position:relative;height:100%;border-radius:24px;overflow:hidden;background:#dce6ed;box-shadow:0 30px 70px #0b2b4026}
+.frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.045);transition:opacity .6s var(--ease),transform 1.4s var(--ease)}
+.frame img.on{opacity:1;transform:scale(1)}
+html.motion-off .frame img{transition:none;transform:none}
+.frame-bar{position:absolute;left:16px;right:16px;bottom:16px;display:flex;justify-content:space-between;align-items:center;gap:12px;pointer-events:none}
+.frame-cap{margin:0;padding:9px 15px;border-radius:99px;background:#0b2233d9;color:#fff;font-size:13px;font-weight:600}
+.frame-dots{display:flex;gap:7px;margin:0;padding:10px 12px;list-style:none;border-radius:99px;background:#0b2233d9}
+.frame-dots li{width:7px;height:7px;border-radius:50%;background:#ffffff70;transition:background .3s,transform .3s}
+.frame-dots li.on{background:#fff;transform:scale(1.3)}
+.steps{list-style:none;margin:0;padding:0}
+.step{min-height:74svh;display:flex;flex-direction:column;justify-content:center;padding:4vh 0;opacity:.38;transition:opacity .45s}
+.step.on{opacity:1}
+html.motion-off .step{transition:none}
+.step-fig{display:none;margin:0}
+.step .n{font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:#1d57b0;margin:0 0 10px;font-variant-numeric:tabular-nums}
+.step h3{font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:clamp(28px,2.6vw,38px);letter-spacing:-.03em;line-height:1.1;margin:0 0 12px}
+.step p{margin:0 0 16px;font-size:17px;line-height:1.66;color:#2c4253;max-width:52ch}
+.step .kv{list-style:none;margin:0;padding:0}
+.step .kv li{display:flex;gap:14px;font-size:15px;line-height:1.45;padding:11px 0;border-top:1px solid #d3dfe8}
+.step .kv b{flex:0 0 108px;font-weight:650;color:#102a3b}
+.step .kv span{color:#2c4253}
+.ch-actions{max-width:1180px;margin:5vh auto 0;padding:0 32px;display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.ch-actions .src{flex-basis:100%;margin:6px 0 0;font-size:13px;color:#46596a}
+.btn-solid{border:0;border-radius:99px;padding:14px 24px;min-height:48px;background:#102a3b;color:#fff;font:inherit;font-size:15px;font-weight:650;cursor:pointer;display:inline-flex;align-items:center;gap:12px}
+.btn-line{border:1.5px solid #102a3b;border-radius:99px;padding:12px 22px;min-height:48px;box-sizing:border-box;color:#102a3b;font-size:15px;font-weight:650;text-decoration:none;display:inline-flex;align-items:center;gap:10px}
+.btn-solid:focus-visible,.btn-line:focus-visible,.card .go:focus-visible{outline:3px solid #1d57b0;outline-offset:3px}
+
+.beyond{background:linear-gradient(180deg,#0b2233 0,#0b2233 calc(100% - 24vh),#0b223300 100%);color:#fff;padding:0 0 28vh}
+.beyond .kicker{color:var(--lime)}
+.beyond .ch-head .lede{color:#c9d7e1}
+.beyond .ch-facts dd{color:#b3c6d3}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 0}
+.grade{display:inline-flex;align-items:center;gap:7px;padding:5px 11px 5px 9px;border-radius:99px;background:#ffffff17;color:#fff;font-size:12px;font-weight:650;letter-spacing:.02em;text-transform:none}
+.grade i{width:10px;height:10px;border-radius:50%;display:block;flex:none}
+.grade.green i{background:#2ecc71}.grade.blue i{background:#4b93ff}.grade.red i{background:#ff5163}.grade.black i{background:#000;box-shadow:0 0 0 1.5px #fff}.grade.walk i{background:var(--lime)}.grade.photo i{background:#fff;border-radius:2px}
+.cards{max-width:1240px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.card{background:#12324a;border-radius:22px;overflow:hidden;display:flex;flex-direction:column;border:1px solid #1f4763}
+.card figure{margin:0;aspect-ratio:16/10;position:relative;overflow:hidden;background:#1a3c55}
+.card figure img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .9s var(--ease)}
+html:not(.motion-off) .card:hover figure img{transform:scale(1.045)}
+.card figcaption{position:absolute;left:10px;bottom:8px;font-size:11px;color:#fff;background:#0b2233cc;padding:3px 9px;border-radius:99px}
+.card-body{padding:20px 22px 22px;display:flex;flex-direction:column;gap:11px;flex:1}
+.tagline{display:flex;align-items:center;flex-wrap:wrap;gap:10px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:#c9d7e1;margin:0}
+.card h3{font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:26px;letter-spacing:-.02em;line-height:1.15;margin:0}
+.card p{margin:0;font-size:15px;line-height:1.6;color:#d6e2ea}
+.card .kv{list-style:none;margin:2px 0 0;padding:0;display:grid;gap:0}
+.card .kv li{font-size:14px;line-height:1.45;color:#d6e2ea;padding:8px 0;border-top:1px solid #ffffff1c}
+.card .kv b{color:#fff;font-weight:650;margin-right:4px}
+.card .go{margin-top:auto;align-self:flex-start;border:0;border-radius:99px;padding:12px 18px;min-height:44px;background:var(--lime);color:#142c2a;font:inherit;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.swipe-hint{display:none}
+@media(min-width:701px){.card.wide{grid-column:1/-1;flex-direction:row}.card.wide figure{flex:0 0 46%;aspect-ratio:auto;min-height:280px}.card.wide .card-body{padding:28px 30px}}
+.ch-foot{text-align:center;margin:9vh 0 0;color:#c9d7e1;font-size:14px}
+
+@media(max-width:1000px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:900px){
+ .ch-head{padding:9vh 20px 5vh}
+ .ch-head .lede{font-size:16px}
+ .ch-facts{gap:16px 30px}
+ .ch-body{grid-template-columns:1fr;gap:0;padding:0 20px}
+ .ch-media{display:none}
+ .step{min-height:0;opacity:1;padding:0 0 46px}
+ .step-fig{display:block;margin:0 0 18px;border-radius:18px;overflow:hidden;aspect-ratio:4/3;background:#dce6ed}
+ .step-fig img{width:100%;height:100%;object-fit:cover;display:block}
+ .step p{font-size:16px}
+ .step .kv b{flex-basis:96px}
+ .ch-actions{padding:0 20px}
+}
+@media(max-width:700px){
+ .cards{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;padding:0 20px 10px;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+ .cards::-webkit-scrollbar{display:none}
+ .card{flex:0 0 86%;scroll-snap-align:center}
+ .swipe-hint{display:block;margin:10px 20px 0;text-align:right;font-size:13px;color:#c9d7e1}
+ .card h3{font-size:24px}
+}
 </style><script>(function(){try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.classList.add("pre");setTimeout(function(){document.documentElement.classList.remove("pre")},1500)}}catch(e){}})();</script><script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" integrity="sha384-HOvlOYPIs/zjoIkWUGXkVmXsjr8GuZLV+Q+rcPwmJOVZVpvTSXQChiN4t9Euv9Vc" crossorigin="anonymous"></script><script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js" integrity="sha384-P8VzCVnT9NBUkMrpcIZrJbA7EBjJvh/fJS6PmP+4nLIM284DtsImIv8D0fFjIkeh" crossorigin="anonymous"></script><script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/Flip.min.js" integrity="sha384-lg3+EgIwmxYq9YD4ix279pdUEasqmOS17fF+2mI/NEg6JHkawYaWYpJ6nKZenPOy" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js" integrity="sha384-jqpi9VmOdhyLoLURgjCn7EpnG9BbnHW57ibIZoeaIU+erWDH3k8fQQg0xH2ySjnw" crossorigin="anonymous"></script></head><body>
 <a id="skipExplore" class="skip" href="#explorer">Skip to resort explorer</a>
-<div class="world" aria-hidden="true"><img id="landscape" class="landscape" src="images/landscape-1800.webp" srcset="images/landscape-1800.webp 1800w, images/landscape-3200.webp 3200w, images/landscape-4000.webp 4000w" sizes="180vw" fetchpriority="high" decoding="async" alt=""><img class="story-photo s1" data-src="images/stay-02-17.webp" alt="" decoding="async"><img class="story-photo s2" data-src="images/poi-vt-peclet-03.webp" alt="" decoding="async"><img class="story-photo s3" data-src="images/poi-link-courchevel-02.webp" alt="" decoding="async"><div class="shade-ice"></div><div class="sky-shade"></div></div>
-<header class="topbar"><a class="brand" href="#top" aria-label="Ski 2027 start"><span class="brand-mark" aria-hidden="true">✳</span>SKI / 27<small>THE THREE VALLEYS</small></a><div class="top-actions"><span class="date">9—16 JANUARY 2027</span><button id="motion" class="glass-btn dark motion-btn" aria-pressed="false">Motion on</button><button id="tripButton" class="glass-btn">Trip details</button></div></header><div class="journey-bar" aria-hidden="true"><i></i></div><div class="doors" id="doors" aria-hidden="true"><div class="door l"><img src="images/landscape-1800.webp" srcset="images/landscape-1800.webp 1800w, images/landscape-3200.webp 3200w, images/landscape-4000.webp 4000w" sizes="180vw" decoding="async" alt=""></div><div class="door r"><img src="images/landscape-1800.webp" srcset="images/landscape-1800.webp 1800w, images/landscape-3200.webp 3200w, images/landscape-4000.webp 4000w" sizes="180vw" decoding="async" alt=""></div></div>
-<div id="top"></div><section class="intro" id="intro" aria-label="Start exploring"><p class="intro-kicker">ONE WEEK. A WHOLE MOUNTAIN.</p><h1><span class="w">Les</span> <span class="w">3</span><br><em><span class="w">Vallées.</span></em></h1><p>From the first lift to the last fondue.<br>Zoom in and explore the places that make the week.</p><div class="intro-actions"><button id="enter">Explore the resort <span aria-hidden="true">↓</span></button><button id="seePhotos" class="ghost">The week in pictures <span aria-hidden="true">↓</span></button></div></section>
+<div class="world" aria-hidden="true"><img id="landscape" class="landscape" src="images/landscape-1800.webp" srcset="images/landscape-1800.webp 1800w, images/landscape-3200.webp 3200w, images/landscape-4000.webp 4000w" sizes="180vw" fetchpriority="high" decoding="async" alt=""></div>
+<canvas id="snow" class="snow" aria-hidden="true"></canvas>
+<div class="rider-lane" aria-hidden="true"><div class="rider"><svg viewBox="0 0 120 120" focusable="false">
+<g class="spray"><circle cx="16" cy="98" r="4"/><circle cx="8" cy="92" r="3"/><circle cx="22" cy="90" r="2.5"/><circle cx="4" cy="100" r="2"/></g>
+<g class="boarder">
+<rect x="20" y="92" width="80" height="9" rx="4.5" fill="#ddff83" stroke="#102a3b" stroke-width="2" transform="rotate(-6 60 96)"/>
+<path d="M40 93 L46 76 L53 64" fill="none" stroke="#102a3b" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M78 89 L70 74 L60 63" fill="none" stroke="#1d3f57" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M56 64 L62 41" fill="none" stroke="#c8102e" stroke-width="14" stroke-linecap="round"/>
+<path d="M61 45 L84 49" fill="none" stroke="#c8102e" stroke-width="7" stroke-linecap="round"/>
+<path d="M60 46 L38 55" fill="none" stroke="#a50d26" stroke-width="7" stroke-linecap="round"/>
+<circle cx="64" cy="30" r="9.5" fill="#102a3b"/>
+<rect x="60" y="27" width="14" height="6" rx="3" fill="#ddff83"/>
+</g></svg></div></div>
+<header class="topbar"><a class="brand" href="#top" aria-label="Ski 2027 start"><span class="brand-mark" aria-hidden="true">✳</span>SKI / 27<small>THE THREE VALLEYS</small></a><div class="top-actions"><span class="date">9—16 JANUARY 2027</span><button id="motion" class="glass-btn dark motion-btn" aria-pressed="false">Motion on</button><button id="tripButton" class="glass-btn">Trip details</button></div></header><div class="journey-bar" aria-hidden="true"><i></i></div>
+<div id="top"></div><section class="intro" id="intro" aria-label="Start exploring"><p class="intro-kicker">ONE WEEK. A WHOLE MOUNTAIN.</p><h1><span class="w">Les</span> <span class="w">3</span><br><em><span class="w">Vallées.</span></em></h1><p>From the first lift to the last fondue.<br>Zoom in and explore the places that make the week.</p><div class="intro-actions"><button id="enter">Explore the resort <span aria-hidden="true">↓</span></button><button id="seePhotos" class="ghost">Where we stay <span aria-hidden="true">↓</span></button></div></section>
 <small class="hero-credit"><span class="hc-long">Val Thorens, February 2024 &middot; </span>photograph by Florian P&eacute;pellin, <a href="https://commons.wikimedia.org/wiki/File:Val_Thorens_village_et_Funitel_en_hiver_(f%C3%A9vrier_2024).JPG" target="_blank" rel="noopener">CC BY-SA 4.0</a></small><div class="scroll-hint" aria-hidden="true">Scroll to get closer <span>↓</span></div>
-<div class="scroll-track" id="track" aria-hidden="true"><div class="end-label"></div></div><section class="story-track" id="story" aria-label="The trip at a glance"><div class="story-stage"><div class="story-panel" id="sp1" inert><p class="kicker">Where we stay</p><h2>Our apartment, in Val Thorens itself.</h2><p>Five bedrooms and four bathrooms in the R&eacute;sidence des Balcons at the top of the resort, with our ski hire shop inside the same building and a Sherpa a few steps away. No bus at either end of the day.</p><dl class="facts"><div><dt>2,300 m</dt><dd>Europe&rsquo;s highest resort</dd></div><div><dt>9 of 10</dt><dd>beds taken</dd></div><div><dt>5 / 4</dt><dd>bedrooms / bathrooms</dd></div></dl><button class="go" type="button" data-open-place="2">See the apartment <span aria-hidden="true">&rarr;</span></button></div><div class="story-panel" id="sp2" inert><p class="kicker">How we get there</p><h2>Geneva at dawn, on the snow by dinner.</h2><p>First flight out on Saturday 9 January, a private transfer up the valley, check-in from 17:00, then skis from the Intersport in our residence before it shuts at 19:30. Home on the 18:20 out of Geneva a week later.</p><dl class="facts"><div><dt>06:00</dt><dd>out of London</dd></div><div><dt>3h20</dt><dd>Geneva to Val Thorens</dd></div><div><dt>17:00</dt><dd>check-in</dd></div></dl><button class="go" type="button" data-open-trip="p2">The full plan <span aria-hidden="true">&rarr;</span></button></div><div class="story-panel" id="sp3" inert><p class="kicker">Beyond Val Thorens</p><h2>Three valleys on one pass.</h2><p>M&eacute;ribel is two lifts over the Col de la Chambre and a long blue down. Courchevel is a full day out over the Saulire. Orelle hangs off the back of the Cime Caron, for the strong skiers only. Every crossing has an afternoon cut-off, so turn for home by 15:30.</p><dl class="facts"><div><dt>600 km</dt><dd>of pistes</dd></div><div><dt>3,200 m</dt><dd>Cime Caron summit</dd></div><div><dt>15:30</dt><dd>turn for home</dd></div></dl><button class="go" type="button" data-open-region="meribel">The link valleys <span aria-hidden="true">&rarr;</span></button></div></div></section><section class="collage" id="collage" aria-labelledby="collageTitle"><div class="collage-head"><p class="kicker">Real photographs · Val Thorens &amp; Méribel</p><h2 id="collageTitle">The week, in pictures.</h2><p class="lede">Every picture is from the listing or the official site. Tap one to open that place: its gallery, price and the details we checked.</p></div><div class="mosaic" id="mosaic"></div><div class="collage-foot"><span>17 of the 308 photographs in the explorer.</span><button id="collageExplore" type="button">Keep going: explore the resort <span aria-hidden="true">↓</span></button></div></section><div class="scroll-tail" id="tail" aria-hidden="true"></div>
+<div class="scroll-track" id="track" aria-hidden="true"><div class="end-label"></div></div><section class="gondola-track" id="story" aria-label="Arriving at the apartment"><div class="g-stage">
+<svg id="gsvg" class="g-svg" viewBox="-80 90 1760 1100" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+<defs>
+<linearGradient id="gGlass" x1="0" y1="0" x2=".6" y2="1"><stop offset="0" stop-color="#3c5a72"/><stop offset=".55" stop-color="#1b3346"/><stop offset="1" stop-color="#0d1f2c"/></linearGradient>
+<linearGradient id="gBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dde5ec"/></linearGradient>
+<linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#062a40" stop-opacity=".55"/><stop offset=".45" stop-color="#062a40" stop-opacity="0"/></linearGradient>
+<clipPath id="gOpen"><rect x="-86" y="252" width="172" height="396" rx="8"/></clipPath>
+</defs>
+<line x1="-2200" y1="420" x2="3800" y2="180" stroke="#122130" stroke-width="3.5"/>
+<g id="gCab" transform="translate(2500 232)"><g id="gSway">
+<rect x="-40" y="-16" width="80" height="32" rx="8" fill="#26313d"/>
+<circle cx="-22" cy="-15" r="8" fill="#3d4a59"/><circle cx="22" cy="-15" r="8" fill="#3d4a59"/>
+<path d="M0 16 L0 70 C0 118 -54 128 -54 172 C-54 196 -30 206 0 206" fill="none" stroke="#2e3946" stroke-width="16" stroke-linecap="round"/>
+<path d="M4 20 L4 70" fill="none" stroke="#5b6b80" stroke-width="3" stroke-linecap="round"/>
+<rect x="-48" y="196" width="96" height="16" rx="5" fill="#26313d"/>
+<path d="M-262 248 C-262 222 -242 208 -214 206 L214 206 C242 208 262 222 262 248 Z" fill="#26313d"/>
+<rect x="-270" y="238" width="540" height="430" rx="48" fill="url(#gBody)" stroke="#b3c1cd" stroke-width="2"/>
+<rect x="-246" y="262" width="492" height="196" rx="30" fill="url(#gGlass)"/>
+<path d="M-232 270 L-170 270 L-232 372 Z" fill="#fff" opacity=".12"/>
+<rect x="-156" y="262" width="7" height="196" fill="#26313d"/><rect x="149" y="262" width="7" height="196" fill="#26313d"/>
+<rect x="-270" y="486" width="540" height="7" fill="#c8102e"/><rect x="-270" y="499" width="540" height="4" fill="#123d54"/>
+<text x="-250" y="562" font-family="Inter,system-ui,sans-serif" font-size="19" font-weight="800" letter-spacing="1.6" fill="#123d54">VAL THORENS</text>
+<text x="112" y="562" font-family="Inter,system-ui,sans-serif" font-size="19" font-weight="800" letter-spacing="1.6" fill="#c8102e">N&#176; 27</text>
+<rect x="-250" y="650" width="500" height="24" rx="12" fill="#26313d"/>
+<rect x="-94" y="244" width="188" height="412" rx="10" fill="#0d1a24"/>
+<g clip-path="url(#gOpen)"><image href="images/stay-02-06.webp" x="-240" y="252" width="480" height="396" preserveAspectRatio="xMidYMid slice"/><rect x="-90" y="248" width="180" height="404" fill="#0d1a24" opacity=".18"/></g>
+<g id="gDoorL"><rect x="-90" y="248" width="90" height="404" rx="8" fill="url(#gBody)" stroke="#8fa2b4" stroke-width="2"/><rect x="-80" y="266" width="70" height="190" rx="14" fill="url(#gGlass)"/><path d="M-76 272 l22 0 l-22 60 z" fill="#fff" opacity=".13"/><rect x="-90" y="486" width="90" height="7" fill="#c8102e"/><rect x="-90" y="499" width="90" height="4" fill="#123d54"/><rect x="-14" y="470" width="6" height="50" rx="3" fill="#7d8fa1"/></g><g id="gDoorR"><rect x="0" y="248" width="90" height="404" rx="8" fill="url(#gBody)" stroke="#8fa2b4" stroke-width="2"/><rect x="10" y="266" width="70" height="190" rx="14" fill="url(#gGlass)"/><path d="M14 272 l22 0 l-22 60 z" fill="#fff" opacity=".13"/><rect x="0" y="486" width="90" height="7" fill="#c8102e"/><rect x="0" y="499" width="90" height="4" fill="#123d54"/><rect x="8" y="470" width="6" height="50" rx="3" fill="#7d8fa1"/></g>
+</g></g>
+</svg>
+<img class="g-photo" data-src="images/stay-02-06.webp" alt="" decoding="async">
+<div class="g-cap"><p class="kicker">Next stop</p><h2>Our apartment.</h2><p>R&eacute;sidence des Balcons, at the top of Val Thorens.</p></div>
+</div></section>
+<section class="chapter stay" id="stay" aria-labelledby="stayTitle">
+<div class="drift" aria-hidden="true"><svg viewBox="0 0 1440 90" preserveAspectRatio="none"><path d="M0 90 L0 50 C150 20 300 64 470 42 C650 18 780 62 950 38 C1110 16 1270 56 1440 30 L1440 90 Z" fill="#f3f7fa"/></svg></div>
+<header class="ch-head"><p class="kicker">Where we stay</p><h2 id="stayTitle">Rosa&euml;l 4, R&eacute;sidence des Balcons.</h2>
+<p class="lede">Nine of us, one apartment at the top of Val Thorens, 9&ndash;16 January 2027. Everything we know about it, room by room.</p>
+<dl class="ch-facts"><div><dt>5 / 4</dt><dd>bedrooms / bathrooms</dd></div><div><dt>9 of 10</dt><dd>beds taken</dd></div><div><dt>2,300 m</dt><dd>Val Thorens</dd></div><div><dt>&pound;789</dt><dd>each, at ten</dd></div></dl></header>
+<div class="ch-body"><div class="ch-media" aria-hidden="true"><div class="frame"><img class="a" alt="" decoding="async"><img class="b" alt="" decoding="async">
+<div class="frame-bar"><p class="frame-cap"></p><ol class="frame-dots"><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ol></div></div></div>
+<ol class="steps"><li class="step" data-photo="stay-02-06" data-cap="Living room"><figure class="step-fig"><img src="images/stay-02-06.webp" alt="Living room with a lit fireplace and sofas" loading="lazy" decoding="async"></figure><div class="step-copy"><p class="n">01</p><h3>Rosa&euml;l 4, at the top of the resort</h3><p>A five-bedroom apartment in the R&eacute;sidence des Balcons, in Val Thorens itself &mdash; ski in, ski out, with a south-facing balcony over the pistes. The living room has a real fire.</p><ul class="kv"><li><b>Sleeps</b><span>10 &middot; nine of us so far, one bed free</span></li><li><b>Rooms</b><span>5 bedrooms, 4 bathrooms</span></li><li><b>Cost</b><span>&pound;789 each, priced at ten</span></li></ul></div></li><li class="step" data-photo="stay-02-01" data-cap="Dining for ten"><figure class="step-fig"><img src="images/stay-02-01.webp" alt="Dining table laid for ten beside big windows" loading="lazy" decoding="async"></figure><div class="step-copy"><p class="n">02</p><h3>A table for all ten of us</h3><p>Open-plan living and dining with the mountains in the windows, and a full kitchen for the nights we cook. Sherpa des Balcons, the grocer, is a few steps away and lends raclette and fondue sets for free.</p><ul class="kv"><li><b>Kitchen</b><span>Fully equipped, cleaning products supplied</span></li><li><b>Groceries</b><span>Sherpa des Balcons, next door</span></li></ul></div></li><li class="step" data-photo="stay-02-16" data-cap="The balcony"><figure class="step-fig"><img src="images/stay-02-16.webp" alt="Balcony looking over snowy chalets to the mountains" loading="lazy" decoding="async"></figure><div class="step-copy"><p class="n">03</p><h3>A south-facing balcony over the pistes</h3><p>The balcony opens off one of the bedrooms and catches the afternoon sun &mdash; the spot for the first drink after the last run.</p><ul class="kv"><li><b>Faces</b><span>South, over the slopes</span></li><li><b>Wi-Fi</b><span>Included</span></li></ul></div></li><li class="step" data-photo="stay-02-12" data-cap="Bedrooms"><figure class="step-fig"><img src="images/stay-02-12.webp" alt="Double bedroom with mountain view" loading="lazy" decoding="async"></figure><div class="step-copy"><p class="n">04</p><h3>Five bedrooms, four bathrooms</h3><p>A mix of doubles and twins, so the four couples and the two of us travelling solo all have a room. Beds are made before we arrive, and linen and towels are included.</p><ul class="kv"><li><b>Linen</b><span>Sheets and towels included</span></li><li><b>Cleaning</b><span>End-of-stay clean included</span></li></ul></div></li><li class="step" data-photo="stay-02-03" data-cap="Pool, sauna and hammam"><figure class="step-fig"><img src="images/stay-02-03.webp" alt="Indoor swimming pool in the residence" loading="lazy" decoding="async"></figure><div class="step-copy"><p class="n">05</p><h3>Pool, sauna and hammam downstairs</h3><p>The residence has an indoor pool with a sauna and a hammam, for guests only. Tired legs, sorted.</p><ul class="kv"><li><b>Wellness</b><span>Pool, sauna, hammam</span></li><li><b>Access</b><span>Residence guests only</span></li></ul></div></li><li class="step" data-photo="stay-02-09" data-cap="Skis and lifts"><figure class="step-fig"><img src="images/stay-02-09.webp" alt="Wooden residence buildings with a chairlift passing overhead" loading="lazy" decoding="async"></figure><div class="step-copy"><p class="n">06</p><h3>Skis on at the door</h3><p>We ski in and out. Our hire shop, Intersport Haut des Balcons, is inside the residence and a few steps from the Plein Sud chairlift up to the Folie Douce. We pick our kit up on the Saturday evening.</p><ul class="kv"><li><b>Hire shop</b><span>Intersport Haut des Balcons, 08:30&ndash;19:30</span></li><li><b>Ski lockers</b><span>3 in the apartment</span></li><li><b>Nearest lift</b><span>Plein Sud chairlift</span></li></ul></div></li><li class="step" data-photo="stay-02-15" data-cap="Arriving and leaving"><figure class="step-fig"><img src="images/stay-02-15.webp" alt="Snow-covered stone and timber residence buildings" loading="lazy" decoding="async"></figure><div class="step-copy"><p class="n">07</p><h3>Arriving and leaving</h3><p>Keys come from the agency reception. There is no lift in the residence, so pack for a few flights of stairs.</p><ul class="kv"><li><b>Check-in</b><span>From 17:00, Saturday 9 January</span></li><li><b>Check-out</b><span>By 10:00, Saturday 16 January</span></li><li><b>Deposit</b><span>&euro;3,500 card hold, not cashed</span></li><li><b>Tourist tax</b><span>Paid on arrival</span></li></ul></div></li></ol></div>
+<div class="ch-actions"><button class="btn-solid" type="button" data-gallery="2">See all 17 photos <span aria-hidden="true">&rarr;</span></button><a class="btn-line" href="https://www.vrbo.com/en-gb/p2480293a?chkin=2027-01-09&amp;chkout=2027-01-16" target="_blank" rel="noopener">The listing &#8599;</a><p class="src">Photos from the Vrbo listing. Details from the listing, checked September 2026.</p></div>
+</section>
+<section class="chapter beyond" id="beyond" aria-labelledby="beyondTitle">
+<header class="ch-head"><p class="kicker">Beyond Val Thorens</p><h2 id="beyondTitle">One pass, three valleys, a lot of mountain.</h2>
+<p class="lede">Our lift pass covers the whole of the 3 Vall&eacute;es. The crossings, the toboggan run, the summits and the photo stops &mdash; and the one rule: every crossing has an afternoon cut-off, so turn for home by 15:30.</p>
+<dl class="ch-facts"><div><dt>600 km</dt><dd>of pistes</dd></div><div><dt>3,200 m</dt><dd>Cime Caron</dd></div><div><dt>6 km</dt><dd>toboggan run</dd></div><div><dt>15:30</dt><dd>turn for home</dd></div></dl>
+<p class="legend"><span class="grade green"><i aria-hidden="true"></i>Green</span><span class="grade blue"><i aria-hidden="true"></i>Blue</span><span class="grade red"><i aria-hidden="true"></i>Red</span><span class="grade black"><i aria-hidden="true"></i>Black</span><span class="grade walk"><i aria-hidden="true"></i>No skis needed</span></p></header>
+<div class="cards" data-lenis-prevent><article class="card"><figure><img src="images/poi-link-meribel-01.webp" alt="Skiers on the piste at the Col de la Chambre under the Aiguille de Péclet" loading="lazy" decoding="async"><figcaption>DimiTalen, CC0</figcaption></figure><div class="card-body"><p class="tagline"><span class="grade blue"><i aria-hidden="true"></i>Blue</span><span>M&eacute;ribel</span></p><h3>Over the Col de la Chambre</h3><p>Up to 2,850 m, then the long, cruisey Lac de la Chambre blue down to Mottaret. Home is two gondolas &mdash; Platti&egrave;res, then the brand-new C&ocirc;te Brune &mdash; and the gentle Pluviom&egrave;tre back into resort.</p><ul class="kv"><li><b>Lifts home</b> 2 gondolas</li><li><b>Last lift back</b> about 16:25</li><li><b>Good for</b> the whole group</li></ul><button class="go" type="button" data-open-place="link-meribel" data-open-region="meribel">On the map <span aria-hidden="true">&rarr;</span></button></div></article><article class="card"><figure><img src="images/poi-vt-peclet-02.webp" alt="Top station of the Funitel de Péclet above the glacier" loading="lazy" decoding="async"><figcaption>R&eacute;mih, CC BY-SA 4.0</figcaption></figure><div class="card-body"><p class="tagline"><span class="grade walk"><i aria-hidden="true"></i>No skis</span><span>Val Thorens</span></p><h3>Cosmojet, France&rsquo;s longest toboggan run</h3><p>Six kilometres and 700 m of drop from the foot of the P&eacute;clet glacier at 3,000 m, reached by the Funitel. About 45 minutes down on a wide track with banked turns &mdash; the evening runs end with mulled wine.</p><ul class="kv"><li><b>Day run</b> &euro;20.50 (~&pound;17), sledge, helmet and Funitel included</li><li><b>Evenings</b> Wed&ndash;Fri, &euro;30.50 (~&pound;26)</li><li><b>Booking</b> not needed by day</li></ul><button class="go" type="button" data-open-place="vt-peclet" data-open-region="vt">On the map <span aria-hidden="true">&rarr;</span></button></div></article><article class="card"><figure><img src="images/poi-vt-cimecaron-02.webp" alt="The Cime Caron top station on a snowy ridge" loading="lazy" decoding="async"><figcaption>R&eacute;mih, CC BY-SA 4.0</figcaption></figure><div class="card-body"><p class="tagline"><span class="grade walk"><i aria-hidden="true"></i>No skis</span><span>Val Thorens</span></p><h3>The Cime Caron, at 3,200 m</h3><p>The top of Val Thorens: the Cairn and Caron gondolas, then the big cable car. A glass-floored footbridge, orientation tables and Caron 3200 for lunch. On foot, everyone can go up and ride back down.</p><ul class="kv"><li><b>Last uplift</b> about 15:45 in January</li><li><b>On skis</b> every way down is red or black</li></ul><button class="go" type="button" data-open-place="vt-cimecaron" data-open-region="vt">On the map <span aria-hidden="true">&rarr;</span></button></div></article><article class="card"><figure><img src="images/poi-link-courchevel-01.webp" alt="La Saulire summit and its lifts in winter" loading="lazy" decoding="async"><figcaption>Florian P&eacute;pellin, CC BY-SA 4.0</figcaption></figure><div class="card-body"><p class="tagline"><span class="grade red"><i aria-hidden="true"></i>Full day</span><span>Courchevel</span></p><h3>Over La Saulire</h3><p>Across the M&eacute;ribel valley and up the Saulire Express to 2,740 m, then down the far side. Four lifts before you make a turn in Courchevel, and the same chain home against the clock.</p><ul class="kv"><li><b>Lifts each way</b> 4 or more</li><li><b>Go when</b> a clear day, early start</li><li><b>Good for</b> confident intermediates</li></ul><button class="go" type="button" data-open-place="link-courchevel" data-open-region="meribel">On the map <span aria-hidden="true">&rarr;</span></button></div></article><article class="card"><figure><img src="images/poi-mer-saulire-01.webp" alt="Saulire Express gondola cabins" loading="lazy" decoding="async"><figcaption>M&eacute;ribel Alpina / Alexis Brot</figcaption></figure><div class="card-body"><p class="tagline"><span>M&eacute;ribel &middot; apr&egrave;s</span></p><h3>La Folie Douce M&eacute;ribel-Courchevel</h3><p>The other Folie Douce, at the Saulire Express mid-station: a proper lunch at La Frui&shy;ti&egrave;re, then the terrace party. Non-skiers can ride up and back.</p><ul class="kv"><li><b>Open</b> 09:00&ndash;17:00</li><li><b>Last lift down</b> 16:55, about &euro;13.50 (~&pound;11) return on foot</li></ul><button class="go" type="button" data-open-place="mer-folie" data-open-region="meribel">On the map <span aria-hidden="true">&rarr;</span></button></div></article><article class="card"><figure><img src="images/poi-link-orelle-01.webp" alt="The Cime de Caron seen from the Rosaël summit" loading="lazy" decoding="async"><figcaption>Florian P&eacute;pellin, CC BY-SA 4.0</figcaption></figure><div class="card-body"><p class="tagline"><span class="grade black"><i aria-hidden="true"></i>Black</span><span>Orelle</span></p><h3>Off the back of the Cime Caron</h3><p>The fourth valley, down the black Combe Rosa&euml;l into the Maurienne. Strong skiers only &mdash; everyone else rides the cable car up for the view.</p><ul class="kv"><li><b>Way down</b> black, then blue</li><li><b>Last uplift</b> about 15:45 in January</li></ul><button class="go" type="button" data-open-place="link-orelle" data-open-region="meribel">On the map <span aria-hidden="true">&rarr;</span></button></div></article><article class="card wide"><figure><img src="images/poi-link-meribel-02.webp" alt="The Vallon du Lou seen from the Col de la Chambre in winter" loading="lazy" decoding="async"><figcaption>Florian P&eacute;pellin, CC BY-SA 4.0</figcaption></figure><div class="card-body"><p class="tagline"><span class="grade photo"><i aria-hidden="true"></i>Photo stop</span><span>All 3 Vall&eacute;es</span></p><h3>The giant photo frames</h3><p>A dozen giant frames are dotted around the viewpoints of the 3 Vall&eacute;es. The ones worth finding: the wooden sculpture on top of La Saulire, the lettering platform on the Pointe de la Masse (2,804 m) and the Cime Caron&rsquo;s orientation tables.</p><ul class="kv"><li><b>Best light</b> late morning, sun behind you</li><li><b>Tip</b> one group photo per valley</li></ul><button class="go" type="button" data-open-place="link-meribel" data-open-region="meribel">On the map <span aria-hidden="true">&rarr;</span></button></div></article></div>
+<p class="swipe-hint" aria-hidden="true">Swipe for more &rarr;</p>
+<p class="ch-foot">Keep scrolling for the map of every place <span aria-hidden="true">&darr;</span></p>
+</section>
+<div class="scroll-tail" id="tail" aria-hidden="true"></div>
 <main class="explorer" id="explorer" aria-label="Interactive resort photo explorer" inert>
 <div class="toolbar"><div class="switcher" aria-label="Resort"><button id="valThorens" aria-pressed="true">Val Thorens <span>our base</span></button><button id="meribel" aria-pressed="false">Beyond VT <span>the link</span></button></div><label class="group-control" id="groupControl" for="guestCount"><span class="gc-long">Split between</span><span class="gc-short" aria-hidden="true">&divide;</span> <select id="guestCount" aria-label="Number of adults for accommodation costs"><option value="6">6 adults</option><option value="7">7 adults</option><option value="8">8 adults</option><option value="9">9 adults</option><option value="10" selected>10 adults</option><option value="11">11 adults</option><option value="12">12 adults</option></select></label><button id="listToggle" class="glass-btn browse-button" aria-pressed="false">Browse list</button></div>
 <div class="categories" role="group" data-lenis-prevent aria-label="Explore by category"><button data-category="stays" aria-pressed="true">Stays</button><button data-category="school" aria-pressed="false">Ski schools</button><button data-category="rentals" aria-pressed="false">Ski hire</button><button data-category="lifts" aria-pressed="false">Key lifts</button><button data-category="apres" aria-pressed="false">Après-ski</button><button data-category="food" aria-pressed="false">Restaurants</button><button data-category="groceries" aria-pressed="false">Groceries</button></div>
@@ -763,8 +947,7 @@ const COLLAGE=[
  {item:2,photo:'stay-02-03',size:'s',depth:-0.8},
  {item:'vt-esf',photo:'poi-vt-esf-04',size:'t',depth:0.65}
 ];
-function buildCollage(){
- $('mosaic').innerHTML=COLLAGE.map(t=>{const p=findItem(t.item);if(!p)return '';const stay=typeof p.id==='number';const kind=stay?'Stay':kindNames[p.category];
+function buildCollage(){if(!$('mosaic'))return;$('mosaic').innerHTML=COLLAGE.map(t=>{const p=findItem(t.item);if(!p)return '';const stay=typeof p.id==='number';const kind=stay?'Stay':kindNames[p.category];
   return '<button class="tile '+t.size+'" data-item="'+p.id+'" data-photo="images/'+t.photo+'.webp" data-depth="'+t.depth+'" aria-label="'+esc(p.short)+', '+kind.toLowerCase()+' in '+esc(p.area)+'. Open details."><span class="tile-in"><span class="tile-img"><img src="images/collage/'+t.photo+'.webp" alt="" loading="lazy" decoding="async"></span><span class="tile-label"><strong>'+esc(p.short)+'</strong><small>'+esc(stay?p.area:(p.region==='vt'?'Val Thorens':'Beyond Val Thorens'))+' · '+kind+'<em aria-hidden="true">Open ↗</em></small></span></span></button>';}).join('');
 }
 buildCollage();
@@ -790,22 +973,57 @@ function startScrollTriggers(){
  ScrollTrigger.create({trigger:tail,start:'top bottom',end:'bottom bottom',onUpdate:s=>applyExplore(s.progress),onRefresh:s=>applyExplore(s.progress)});
 }
 
-/* ---------- story stage: CSS-variable bus, named scroll segments (smoothstep in/out), doors that part, close-ups, panels ---------- */
-const story=$('story'),doors=$('doors'),panels=[$('sp1'),$('sp2'),$('sp3')],storyPhotos=Array.from(document.querySelectorAll('.story-photo'));
+/* ---------- gondola arrival: the cabin rides in on the cable, the centre doors slide apart, the camera flies through the doorway into the apartment ---------- */
+const story=$('story'),gSvg=$('gsvg'),gCab=$('gCab'),gSway=$('gSway'),gDL=$('gDoorL'),gDR=$('gDoorR'),gPhoto=document.querySelector('.g-photo');
 const ss=(a,b,x)=>{const t=clamp((x-a)/(b-a));return t*t*(3-2*t);};
-const SEG=[[.12,.30,.36,.46],[.42,.56,.62,.72],[.68,.82,.90,1]];
-const PH=[[0,.07,.40,.50],[.40,.50,.66,.76],[.66,.76,1.5,1.6]];
-let storyLoaded=false,storyS=0;
-function loadStoryPhotos(){if(storyLoaded)return;storyLoaded=true;storyPhotos.forEach(p=>{p.src=p.dataset.src;});}
-function applyStory(t){const s=clamp(t);storyS=s;if(journey>.15||s>0)loadStoryPhotos();const off=motionOff;
- const split=off?(s>.12?1:0):ss(.05,.25,s);root.style.setProperty('--split',split.toFixed(4));doors.classList.toggle('open',split>=.999);
- let dof=0;
- SEG.forEach((g,i)=>{const en=off?(s>=g[0]?1:0):ss(g[0],g[1],s),ex=off?(s>=g[3]?1:0):ss(g[2],g[3],s),act=en*(1-ex);dof=Math.max(dof,act);const p=panels[i];
-  p.style.setProperty('--o',(off?act:Math.pow(act,1.2)).toFixed(4));p.style.setProperty('--y',off?'0':(58*(1-en)-86*ex).toFixed(1));
-  const on=act>.5;if(p.classList.contains('on')!==on){p.classList.toggle('on',on);p.inert=!on;}
-  root.style.setProperty('--sb'+(i+1),(off?0:act*6).toFixed(2));});
- PH.forEach((g,i)=>{const v=off?((s>=g[0]&&s<g[3])?1:0):ss(g[0],g[1],s)*(1-ss(g[2],g[3],s));root.style.setProperty('--sp'+(i+1),v.toFixed(4));});
- root.style.setProperty('--dof',(off?(dof>.5?1:0):dof).toFixed(4));}
+let storyS=0,gPhotoLoaded=false;
+function gBoxes(){const a=Math.max(.3,innerWidth/Math.max(1,innerHeight));const w0=Math.max(1100*a,760),h0=w0/a;let w1,h1;if(a<172/396){h1=380;w1=380*a;}else{w1=160;h1=160/a;}return{a,w0,h0,w1,h1};}
+function applyStory(t){const s=clamp(t);storyS=s;const off=motionOff;
+ const arr=off?1:ss(.02,.34,s);
+ const gx=2500-1700*arr,gy=300-(gx-800)*.04;
+ const sway=off?0:(2.8*Math.sin(s*46)*(1-arr)+.8*Math.sin(s*18)*(1-ss(.34,.5,s)));
+ gCab.setAttribute('transform','translate('+gx.toFixed(1)+' '+gy.toFixed(1)+')');
+ gSway.setAttribute('transform','rotate('+sway.toFixed(2)+')');
+ const d=off?(s>.35?1:0):ss(.34,.56,s);
+ gDL.setAttribute('transform','translate('+(-98*d).toFixed(1)+' 0)');gDR.setAttribute('transform','translate('+(98*d).toFixed(1)+' 0)');
+ const z=off?(s>.7?1:0):Math.pow(ss(.46,.95,s),1.3);
+ const B=gBoxes(),w=Math.exp(Math.log(B.w0)+(Math.log(B.w1)-Math.log(B.w0))*z),h=w/B.a,cx=800,cy=640+110*z;
+ gSvg.setAttribute('viewBox',(cx-w/2).toFixed(1)+' '+(cy-h/2).toFixed(1)+' '+w.toFixed(1)+' '+h.toFixed(1));
+ if(s>.15&&!gPhotoLoaded&&gPhoto){gPhotoLoaded=true;gPhoto.src=gPhoto.dataset.src;}
+ root.style.setProperty('--gcap',(off?(s<.45?1:0):ss(.05,.15,s)*(1-ss(.34,.46,s))).toFixed(3));
+ root.style.setProperty('--gphoto',(off?(s>.8?1:0):ss(.82,.97,s)).toFixed(3));}
+window.addEventListener('resize',()=>applyStory(storyS),{passive:true});
+
+/* ---------- where we stay: on wide screens the photo sits sticky on the left and follows the step you are reading ---------- */
+const sStay=$('stay'),sSteps=sStay?Array.from(sStay.querySelectorAll('.step')):[];
+const sFrame=sStay&&sStay.querySelector('.frame'),sImgs=sFrame?[sFrame.querySelector('img.a'),sFrame.querySelector('img.b')]:[],sCap=sStay&&sStay.querySelector('.frame-cap'),sDots=sStay?Array.from(sStay.querySelectorAll('.frame-dots li')):[];
+let sActive=-1,sFront=0;
+function sShow(i){if(i<0||i===sActive||!sFrame)return;sActive=i;const st=sSteps[i],src='images/'+st.dataset.photo+'.webp';
+ const cur=sImgs[sFront],nxt=sImgs[1-sFront];const swap=()=>{nxt.classList.add('on');cur.classList.remove('on');sFront=1-sFront;};
+ if(nxt.getAttribute('src')===src&&nxt.complete){swap();}else{nxt.onload=()=>{nxt.onload=null;swap();};nxt.src=src;}
+ if(sCap)sCap.textContent=st.dataset.cap||'';sDots.forEach((d,j)=>d.classList.toggle('on',j===i));sSteps.forEach((x,j)=>x.classList.toggle('on',j===i));}
+if(sFrame&&sSteps.length){sImgs[0].src='images/'+sSteps[0].dataset.photo+'.webp';sImgs[0].classList.add('on');sActive=0;if(sCap)sCap.textContent=sSteps[0].dataset.cap;if(sDots[0])sDots[0].classList.add('on');sSteps[0].classList.add('on');
+ if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)sShow(sSteps.indexOf(e.target));});},{rootMargin:'-46% 0px -46% 0px'});sSteps.forEach(x=>io.observe(x));}}
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-gallery]');if(!b)return;showProperty(Number(b.dataset.gallery),b,true);});
+
+/* ---------- chapter reveals ---------- */
+let chapterMotion=[];
+function startChapterMotion(){if(chapterMotion.length||!live()||!window.ScrollTrigger)return;
+ document.querySelectorAll('.ch-head > *, .step-copy, .card').forEach(el=>{chapterMotion.push(gsap.from(el,{y:28,opacity:0,duration:.8,ease:'power3.out',clearProps:'transform,opacity',scrollTrigger:{trigger:el,start:'top 90%',once:true}}));});}
+function stopChapterMotion(){chapterMotion.forEach(x=>{try{x.scrollTrigger&&x.scrollTrigger.kill();x.progress(1).kill();}catch(e){}});chapterMotion=[];if(window.gsap)gsap.set(['.ch-head > *','.step-copy','.card'],{clearProps:'transform,opacity'});}
+
+/* ---------- falling snow over the hero and the gondola ride (canvas, paused off-screen and when motion is off) ---------- */
+const snowC=$('snow');let snowRaf=0,flakes=[],sW=0,sH=0,sCtx=snowC&&snowC.getContext('2d');
+function snowSize(){if(!snowC)return;const dpr=Math.min(2,window.devicePixelRatio||1);sW=snowC.width=Math.round(innerWidth*dpr);sH=snowC.height=Math.round(innerHeight*dpr);const n=innerWidth<700?55:110;
+ flakes=Array.from({length:n},()=>({x:Math.random()*sW,y:Math.random()*sH,r:(Math.random()*1.9+.7)*dpr,v:(Math.random()*.7+.35)*dpr,p:Math.random()*6.28,o:Math.random()*.45+.4}));}
+function snowWanted(){return !!snowC&&!motionOff&&!document.hidden&&sStay&&scrollY<sStay.offsetTop;}
+function snowTick(){snowRaf=0;if(!snowWanted()){if(sCtx)sCtx.clearRect(0,0,sW,sH);return;}sCtx.clearRect(0,0,sW,sH);sCtx.fillStyle='#fff';
+ for(const f of flakes){f.y+=f.v;f.p+=.013;f.x+=Math.sin(f.p)*.4;if(f.y>sH+6){f.y=-6;f.x=Math.random()*sW;}sCtx.globalAlpha=f.o;sCtx.beginPath();sCtx.arc(f.x,f.y,f.r,0,6.2832);sCtx.fill();}
+ sCtx.globalAlpha=1;snowRaf=requestAnimationFrame(snowTick);}
+function solidTop(){if(!sStay)return;const bey=$('beyond');const on=scrollY>=sStay.offsetTop-70&&scrollY<bey.offsetTop+bey.offsetHeight-innerHeight*.6;root.classList.toggle('solid-top',on);}
+window.addEventListener('scroll',solidTop,{passive:true});window.addEventListener('resize',solidTop,{passive:true});solidTop();
+function snowKick(){if(!snowRaf&&snowWanted())snowRaf=requestAnimationFrame(snowTick);}
+if(snowC){snowSize();window.addEventListener('resize',()=>{snowSize();snowKick();},{passive:true});window.addEventListener('scroll',snowKick,{passive:true});document.addEventListener('visibilitychange',snowKick);snowKick();}
 /* pointer parallax: lerped, rAF only while settling, mouse only, never once the explorer is live */
 let ptx=0,pty=0,pcx=0,pcy=0,pRaf=0;
 function pTick(){pRaf=0;pcx+=(ptx-pcx)*.12;pcy+=(pty-pcy)*.12;root.style.setProperty('--px',pcx.toFixed(2));root.style.setProperty('--py',pcy.toFixed(2));if(Math.abs(ptx-pcx)>.05||Math.abs(pty-pcy)>.05)pRaf=requestAnimationFrame(pTick);}
@@ -819,16 +1037,16 @@ function stopLenis(){if(!lenis)return;gsap.ticker.remove(lenisTick);lenis.destro
 function scrollToY(y){if(lenis)lenis.scrollTo(y,{duration:1.5,easing:t=>1-Math.pow(1-t,4)});else window.scrollTo({top:y,behavior:motionOff?'instant':'smooth'});}
 const maxScroll=()=>Math.max(0,document.documentElement.scrollHeight-innerHeight);
 function goExplore(){scrollToY(maxScroll());}
-function goCollage(){scrollToY(Math.max(0,$('collage').offsetTop-24));}
-$('enter').addEventListener('click',goExplore);$('seePhotos').addEventListener('click',goCollage);$('collageExplore').addEventListener('click',goExplore);
+function goCollage(){scrollToY(Math.max(0,$('stay').offsetTop-8));}
+$('enter').addEventListener('click',goExplore);$('seePhotos').addEventListener('click',goCollage);
 $('skipExplore').addEventListener('click',e=>{e.preventDefault();goExplore();setTimeout(()=>$('valThorens').focus({preventScroll:true}),motionOff?0:1700);});
 
 /* ---------- motion toggle ---------- */
 function toggleMotion(){root.classList.toggle('motion-off',motionOff);$('motion').setAttribute('aria-pressed',String(motionOff));$('motion').textContent=motionOff?'Motion off':'Motion on';
- if(motionOff){stopLenis();stopCollageMotion();if(window.gsap){gsap.globalTimeline.getChildren(true,true,false).forEach(t=>{if(t.targets().some(x=>x&&x.nodeType===1))t.progress(1).kill();});}}else{startLenis();startCollageMotion();}
+ if(motionOff){stopLenis();stopCollageMotion();stopChapterMotion();if(window.gsap){gsap.globalTimeline.getChildren(true,true,false).forEach(t=>{if(t.targets().some(x=>x&&x.nodeType===1))t.progress(1).kill();});}}else{startLenis();startCollageMotion();startChapterMotion();}
  root.style.setProperty('--extra',extraZoom);
  if(motionOff){ptx=pty=pcx=pcy=0;root.style.setProperty('--px',0);root.style.setProperty('--py',0);}
- applyStory(storyS);
+ applyStory(storyS);snowKick();
  if(triggersOn)ScrollTrigger.refresh();else schedule();}
 $('motion').addEventListener('click',()=>{motionOff=!motionOff;toggleMotion();});reduce.addEventListener('change',()=>{motionOff=reduce.matches;toggleMotion();});
 
@@ -1009,7 +1227,7 @@ let oldMobile=isMobile();window.addEventListener('resize',()=>{const mobile=isMo
 /* ---------- collage motion: reveal on scroll, depth parallax, tilt on hover (slow drift on the big tiles is CSS) ---------- */
 let collageMotion=[];
 function startCollageMotion(){
- if(collageMotion.length||!live()||!window.ScrollTrigger)return;
+ if(!$('collage')||collageMotion.length||!live()||!window.ScrollTrigger)return;
  const tiles=Array.from(document.querySelectorAll('.tile')).filter(t=>t.offsetParent!==null);const section=$('collage');
  const below=tiles.filter(t=>t.getBoundingClientRect().top>innerHeight*.9);
  gsap.set(below.map(t=>t.firstElementChild),{opacity:0,y:40,scale:.96});
@@ -1055,13 +1273,13 @@ function initMotion(){
   startScrollTriggers();magnetic($('enter'),.3,110);}
  toggleMotion();
  introReveal();
- if(live()){startLenis();startCollageMotion();}
+ if(live()){startLenis();startCollageMotion();startChapterMotion();}
  if(!triggersOn)measure();
 }
 render();measure();toggleMotion();
 function route(){const h=location.hash.slice(1);if(!h)return;
  if(SLUG_TAB[h]){openTrip(SLUG_TAB[h],true);return;}
- if(h==='pictures'){goCollage();return;}
+ if(h==='pictures'||h==='stay'){goCollage();return;}  if(h==='beyond'){scrollToY(Math.max(0,$('beyond').offsetTop-8));return;}
  if(h==='explore'||h==='explorer'){goExplore();return;}
  const m=/^p\/(.+)$/.exec(h);if(m&&findItem(/^\d+$/.test(m[1])?Number(m[1]):m[1])){pendingPlace=m[1];goExplore();}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{initMotion();route();});else{initMotion();route();}
