@@ -396,6 +396,17 @@ body.sheet-open .stop-panels,body.sheet-open .line-end,body.sheet-open .line-hin
  .st-left{margin:20px 0 4px}
 }
 @media(max-width:800px) and (prefers-reduced-motion:reduce){.st-thumb{transition:none}}
+
+/* ==== touch phones: one swipe = one stop, the card scrolls itself, cheaper paint (25 Sep) ==== */
+@media(max-width:800px) and (pointer:coarse){
+ .stop{overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;touch-action:pan-y}
+ .stop.live{will-change:scroll-position}
+}
+@media(max-width:800px){
+ .stops ol{background:#0b2233eb;-webkit-backdrop-filter:none;backdrop-filter:none}
+ .stop{box-shadow:0 -6px 24px #06263a33,0 16px 40px #06263a4d}
+ .l-svg{will-change:auto}
+}
 </style><script>(function(){try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.classList.add("pre");setTimeout(function(){document.documentElement.classList.remove("pre")},1500)}}catch(e){}})();</script><script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js" integrity="sha384-HOvlOYPIs/zjoIkWUGXkVmXsjr8GuZLV+Q+rcPwmJOVZVpvTSXQChiN4t9Euv9Vc" crossorigin="anonymous"></script><script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js" integrity="sha384-P8VzCVnT9NBUkMrpcIZrJbA7EBjJvh/fJS6PmP+4nLIM284DtsImIv8D0fFjIkeh" crossorigin="anonymous"></script><script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/Flip.min.js" integrity="sha384-lg3+EgIwmxYq9YD4ix279pdUEasqmOS17fF+2mI/NEg6JHkawYaWYpJ6nKZenPOy" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js" integrity="sha384-jqpi9VmOdhyLoLURgjCn7EpnG9BbnHW57ibIZoeaIU+erWDH3k8fQQg0xH2ySjnw" crossorigin="anonymous"></script></head><body>
 <a id="skipExplore" class="skip" href="#story">Skip to the stops</a>
 <div class="world" aria-hidden="true"><img id="landscape" class="landscape" src="images/landscape-1800.webp" srcset="images/landscape-1800.webp 1800w, images/landscape-3200.webp 3200w, images/landscape-4000.webp 4000w" sizes="180vw" fetchpriority="high" decoding="async" alt=""></div>
@@ -1091,11 +1102,11 @@ function schedule(){if(!frame)frame=requestAnimationFrame(measure);}
 window.addEventListener('scroll',schedule,{passive:true});window.addEventListener('resize',schedule,{passive:true});
 let triggersOn=false;
 function startScrollTriggers(){
- if(triggersOn||!window.ScrollTrigger)return;triggersOn=true;
+ if(triggersOn||!window.ScrollTrigger)return;triggersOn=true;ScrollTrigger.config({ignoreMobileResize:true});
  window.removeEventListener('scroll',schedule);window.removeEventListener('resize',schedule);
  ScrollTrigger.create({trigger:track,start:'top top',end:()=>'+='+Math.round(track.offsetHeight),onUpdate:s=>applyJourney(s.progress),onRefresh:s=>applyJourney(s.progress)});
  ScrollTrigger.create({trigger:story,start:'top top',end:'bottom bottom',onUpdate:s=>applyStory(s.progress),onRefresh:s=>applyStory(s.progress)});
- ScrollTrigger.create({start:0,end:'max',onUpdate:s=>root.style.setProperty('--prog',s.progress.toFixed(4)),onRefresh:s=>root.style.setProperty('--prog',s.progress.toFixed(4))});
+ {const jb=document.querySelector('.journey-bar i'),jp=s=>{const v=s.progress.toFixed(3);if(jb&&jb._p!==v){jb._p=v;jb.style.setProperty('--prog',v);}};ScrollTrigger.create({start:0,end:'max',onUpdate:jp,onRefresh:jp});}
  ScrollTrigger.create({trigger:tail,start:'top bottom',end:'bottom bottom',onUpdate:s=>applyExplore(s.progress),onRefresh:s=>applyExplore(s.progress)});
 }
 
@@ -1109,33 +1120,63 @@ let storyS=0,lCur=-1;
 function lLoad(i){const st=lStops[i];if(!st||st.dataset.loaded)return;st.dataset.loaded='1';st.querySelectorAll('img[data-src]').forEach(im=>{im.src=im.dataset.src;});}
 function lGeom(){const a=Math.max(.3,innerWidth/Math.max(1,innerHeight)),W=1000*a,mob=innerWidth<801;
  return{a,W,mob,x:mob?W*.5:W*.27,k:mob?Math.min(.4,W/1000*.8):Math.min(1.05,W*.00056),y1:mob?205:215,y2:mob?178:160};}
+const lTouch=matchMedia('(max-width:800px) and (pointer:coarse)');
+const lV=new WeakMap();
+function sv(el,k,v){if(!el)return;let m=lV.get(el);if(!m){m={};lV.set(el,m);}if(m[k]===v)return;m[k]=v;if(k.charCodeAt(0)===45)el.style.setProperty(k,v);else el.setAttribute(k,v);}
+const lRailI=document.querySelector('.stops-rail i'),lHint=document.querySelector('.line-hint');
 function applyStory(t){const p=clamp(t);storyS=p;const off=motionOff,G=lGeom();
- lSvg.setAttribute('viewBox','0 0 '+G.W.toFixed(1)+' 1000');
+ sv(lSvg,'viewBox','0 0 '+G.W.toFixed(1)+' 1000');
  const cy=x=>G.y1+(G.y2-G.y1)*(x/G.W);
- lCable.setAttribute('x1',-40);lCable.setAttribute('y1',cy(-40).toFixed(1));lCable.setAttribute('x2',(G.W+40).toFixed(1));lCable.setAttribute('y2',cy(G.W+40).toFixed(1));
+ sv(lCable,'x1','-40');sv(lCable,'y1',cy(-40).toFixed(1));sv(lCable,'x2',(G.W+40).toFixed(1));sv(lCable,'y2',cy(G.W+40).toFixed(1));
  const u=p*LN,i=Math.min(LN-1,Math.floor(u)),s=u-i;
  // travel: the end of one stop plus the start of the next
  let tr=-1;if(s<.08)tr=(s+.05)/.13;else if(s>.95)tr=(s-.95)/.13;
  let cx=G.x;if(i===0&&s<.08&&!off)cx=G.x+(G.W+320-G.x)*(1-ss(0,.08,s));if(i===LN-1&&s>.95&&!off)cx=G.x-(G.x+360)*ss(.95,1,s);
  const sway=(off||tr<0)?0:3.2*Math.sin(tr*Math.PI*2)*Math.sin(tr*Math.PI);
- lCab.setAttribute('transform','translate('+cx.toFixed(1)+' '+cy(cx).toFixed(1)+') scale('+G.k.toFixed(3)+')');
- lSway.setAttribute('transform','rotate('+sway.toFixed(2)+')');
+ sv(lCab,'transform','translate('+cx.toFixed(1)+' '+cy(cx).toFixed(1)+') scale('+G.k.toFixed(3)+')');
+ sv(lSway,'transform','rotate('+sway.toFixed(2)+')');
  const px=(off||tr<0||(i===0&&s<.08))?-400:(G.W+200)-(G.W+400)*tr;
- lPylon.setAttribute('transform','translate('+px.toFixed(1)+' '+cy(px).toFixed(1)+') scale('+(G.k*.9).toFixed(3)+')');
+ sv(lPylon,'transform','translate('+px.toFixed(1)+' '+cy(px).toFixed(1)+') scale('+(G.k*.9).toFixed(3)+')');
  const d=off?1:ss(.08,.13,s)*(1-ss(.89,.95,s));
- lDL.setAttribute('transform','translate('+(-98*d).toFixed(1)+' 0)');lDR.setAttribute('transform','translate('+(98*d).toFixed(1)+' 0)');lWarm.setAttribute('opacity',(d*.95).toFixed(3));
+ sv(lDL,'transform','translate('+(-98*d).toFixed(1)+' 0)');sv(lDR,'transform','translate('+(98*d).toFixed(1)+' 0)');sv(lWarm,'opacity',(d*.95).toFixed(2));
  const o=off?1:ss(.12,.17,s)*(1-ss(.85,.9,s));
- lStops.forEach((st,j)=>{const v=j===i?o:0;st.style.setProperty('--o',v.toFixed(3));const on=v>.55;if(st.classList.contains('live')!==on){st.classList.toggle('live',on);st.inert=!on;}});
- {const st=lStops[i];if(st){const max=st.scrollHeight-st.clientHeight;const r=clamp((s-.2)/.5);st.scrollTop=max>2?Math.round(max*r):0;st.style.setProperty('--more',(max>6&&r<.98)?'1':'0');}}
- if(i!==lCur){if(lCur>=0)lShut();lCur=i;lLoad(i);lLoad(i+1);if(i>0)lLoad(i-1);lChips.forEach((c,j)=>{if(j===i)c.setAttribute('aria-current','step');else c.removeAttribute('aria-current');});
+ lStops.forEach((st,j)=>{const v=j===i?o:0;sv(st,'--o',v.toFixed(3));const on=v>.55;if(st.classList.contains('live')!==on){st.classList.toggle('live',on);st.inert=!on;}});
+ if(!lTouch.matches){const st=lStops[i];if(st){const max=st.scrollHeight-st.clientHeight;const r=clamp((s-.2)/.5);st.scrollTop=max>2?Math.round(max*r):0;st.style.setProperty('--more',(max>6&&r<.98)?'1':'0');}}
+ if(i!==lCur){if(lCur>=0)lShut();lCur=i;if(lTouch.matches&&lStops[i]){lStops[i].scrollTop=0;lMore(lStops[i]);}lLoad(i);lLoad(i+1);if(i>0)lLoad(i-1);lChips.forEach((c,j)=>{if(j===i)c.setAttribute('aria-current','step');else c.removeAttribute('aria-current');});
   const c=lChips[i],ol=c&&c.closest('ol');if(ol){const L=c.offsetLeft-ol.clientWidth/2+c.offsetWidth/2;ol.scrollTo({left:Math.max(0,L),behavior:off?'auto':'smooth'});}}
- root.style.setProperty('--lineprog',p.toFixed(4));root.classList.toggle('riding',p>0);
- const bar=off?(p>0?1:0):ss(0,.012,p);root.style.setProperty('--baron',bar.toFixed(3));lBar.classList.toggle('on',bar>.5);
- const le=i===LN-1?(off?(s>.9?1:0):ss(.965,.995,s)):0;root.style.setProperty('--lend',le.toFixed(3));lEnd.classList.toggle('on',le>.5);lEnd.setAttribute('aria-hidden',String(le<=.5));
- root.style.setProperty('--hint',(off?0:(i<LN-1?ss(.78,.82,s)*(1-ss(.85,.9,s)):0)).toFixed(3));}
+ sv(lRailI,'--lineprog',p.toFixed(4));root.classList.toggle('riding',p>0);
+ const bar=off?(p>0?1:0):ss(0,.012,p);sv(lBar,'--baron',bar.toFixed(3));lBar.classList.toggle('on',bar>.5);
+ const le=i===LN-1?(off?(s>.9?1:0):ss(.965,.995,s)):0;sv(lEnd,'--lend',le.toFixed(3));lEnd.classList.toggle('on',le>.5);sv(lEnd,'aria-hidden',String(le<=.5));
+ sv(lHint,'--hint',(off?0:(i<LN-1?ss(.78,.82,s)*(1-ss(.85,.9,s)):0)).toFixed(3));}
 window.addEventListener('resize',()=>applyStory(storyS),{passive:true});
+function lMore(st){const max=st.scrollHeight-st.clientHeight;sv(st,'--more',(max>6&&st.scrollTop<max-6)?'1':'0');}
+lStops.forEach(st=>st.addEventListener('scroll',()=>{if(lTouch.matches)lMore(st);},{passive:true}));
+const lPages=()=>{const span=story.offsetHeight-innerHeight;return [0].concat(lStops.map((_,j)=>story.offsetTop+((j+.3)/LN)*span),[story.offsetTop+span]);};
+let lTw=null,tS=null,lIdle=0;
+function lGlide(y){y=Math.max(0,Math.round(y));const from=scrollY;if(Math.abs(y-from)<2){lTw=null;return;}
+ if(motionOff){lTw=null;window.scrollTo(0,y);return;}
+ const d=Math.min(1100,Math.max(650,Math.abs(y-from)*.32)),fresh=!lTw;lTw={from,to:y,t0:performance.now(),d};if(fresh)requestAnimationFrame(lTwStep);}
+function lTwStep(){if(!lTw)return;const k=Math.min(1,(performance.now()-lTw.t0)/lTw.d),e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
+ window.scrollTo(0,Math.round(lTw.from+(lTw.to-lTw.from)*e));if(k<1)requestAnimationFrame(lTwStep);else lTw=null;}
+function lNearest(y){const P=lPages();let best=0,bd=1e9;P.forEach((v,k)=>{const d=Math.abs(v-y);if(d<bd){bd=d;best=k;}});return best;}
+let lLast={k:-1,t:0};
+function lStep(dir){const P=lPages(),now=performance.now(),base=(lLast.k>=0&&now-lLast.t<1300)?lLast.k:lNearest(lTw?lTw.to:scrollY),k=Math.max(0,Math.min(P.length-1,base+dir));lLast={k,t:now};lGlide(P[k]);}
+const lInRide=()=>scrollY>=story.offsetTop-innerHeight*.35&&scrollY<=story.offsetTop+story.offsetHeight-innerHeight+4;
+document.addEventListener('touchstart',e=>{tS=null;if(!lTouch.matches||e.touches.length!==1)return;const t=e.target;
+ if(!t.closest||t.closest('dialog,.sheet,.stops,.st-thumbs,.lightbox,#lightbox,input,select,textarea'))return;
+ if(!lInRide()&&!t.closest('#story'))return;
+ const card=t.closest('.stop.live'),max=card?card.scrollHeight-card.clientHeight:0;
+ tS={x:e.touches[0].clientX,y:e.touches[0].clientY,card,atTop:!card||card.scrollTop<=1,atEnd:!card||card.scrollTop>=max-1,mode:null};},{passive:true});
+document.addEventListener('touchmove',e=>{if(!tS)return;const dx=e.touches[0].clientX-tS.x,dy=e.touches[0].clientY-tS.y;
+ if(!tS.mode){if(Math.abs(dx)<7&&Math.abs(dy)<7)return;
+  tS.mode=Math.abs(dx)>Math.abs(dy)?'x':(tS.card&&((dy<0&&!tS.atEnd)||(dy>0&&!tS.atTop)))?'card':'page';}
+ if(tS.mode==='page'&&e.cancelable)e.preventDefault();},{passive:false});
+document.addEventListener('touchend',e=>{const st=tS;tS=null;if(!st||st.mode!=='page')return;const dy=e.changedTouches[0].clientY-st.y;if(Math.abs(dy)<30)return;lStep(dy<0?1:-1);},{passive:true});
+document.addEventListener('touchcancel',()=>{tS=null;},{passive:true});
+// native momentum from the hero can carry into the ride: settle on the nearest stop once it stops
+window.addEventListener('scroll',()=>{if(!lTouch.matches||lTw||tS)return;clearTimeout(lIdle);lIdle=setTimeout(()=>{if(lTw||tS||!lInRide())return;const P=lPages(),k=lNearest(scrollY);if(k>0&&Math.abs(P[k]-scrollY)>4)lGlide(P[k]);},180);},{passive:true});
 function lShut(){const sh=document.getElementById('propertySheet');if(sh&&!sh.hidden)closeSheet(false);}
-function goStop(j){lShut();const top=story.offsetTop+((j+.18)/LN)*(story.offsetHeight-innerHeight);scrollToY(Math.round(top));}
+function goStop(j){lShut();if(lTouch.matches){lGlide(lPages()[j+1]);return;}const top=story.offsetTop+((j+(lTouch.matches?.3:.18))/LN)*(story.offsetHeight-innerHeight);scrollToY(Math.round(top));}
 lChips.forEach(c=>c.addEventListener('click',()=>goStop(Number(c.dataset.stop))));
 /* photos inside a stop: thumbnails swap the big picture, the big picture opens the full gallery at that photo */
 lStops.forEach(st=>{const main=st.querySelector('.st-main img'),thumbs=Array.from(st.querySelectorAll('.st-thumb'));
@@ -1154,7 +1195,7 @@ function startChapterMotion(){}function stopChapterMotion(){}
 
 /* ---------- falling snow over the hero and the gondola ride (canvas, paused off-screen and when motion is off) ---------- */
 const snowC=$('snow');let snowRaf=0,flakes=[],sW=0,sH=0,sCtx=snowC&&snowC.getContext('2d');
-function snowSize(){if(!snowC)return;const dpr=Math.min(2,window.devicePixelRatio||1);sW=snowC.width=Math.round(innerWidth*dpr);sH=snowC.height=Math.round(innerHeight*dpr);const n=innerWidth<700?55:110;
+function snowSize(){if(!snowC)return;const dpr=Math.min(innerWidth<700?1:2,window.devicePixelRatio||1);sW=snowC.width=Math.round(innerWidth*dpr);sH=snowC.height=Math.round(innerHeight*dpr);const n=innerWidth<700?40:110;
  flakes=Array.from({length:n},()=>({x:Math.random()*sW,y:Math.random()*sH,r:(Math.random()*1.9+.7)*dpr,v:(Math.random()*.7+.35)*dpr,p:Math.random()*6.28,o:Math.random()*.45+.4}));}
 function snowWanted(){return !!snowC&&!motionOff&&!document.hidden&&scrollY<story.offsetTop+story.offsetHeight-innerHeight*.5;}
 function snowTick(){snowRaf=0;if(!snowWanted()){if(sCtx)sCtx.clearRect(0,0,sW,sH);return;}sCtx.clearRect(0,0,sW,sH);sCtx.fillStyle='#fff';
@@ -1170,7 +1211,7 @@ window.addEventListener('pointermove',e=>{if(!live()||!hoverable.matches||e.poin
 /* ---------- Lenis smooth scroll (wheel only; touch stays native) ---------- */
 let lenis=null;
 function lenisTick(t){if(lenis)lenis.raf(t*1000);}
-function startLenis(){if(lenis||!window.Lenis||!window.gsap||motionOff)return;lenis=new Lenis({lerp:.1,wheelMultiplier:1,anchors:true});if(window.ScrollTrigger)lenis.on('scroll',ScrollTrigger.update);gsap.ticker.add(lenisTick);gsap.ticker.lagSmoothing(0);}
+function startLenis(){if(lenis||!window.Lenis||!window.gsap||motionOff||matchMedia('(pointer:coarse)').matches)return;lenis=new Lenis({lerp:.1,wheelMultiplier:1,anchors:true});if(window.ScrollTrigger)lenis.on('scroll',ScrollTrigger.update);gsap.ticker.add(lenisTick);gsap.ticker.lagSmoothing(0);}
 function stopLenis(){if(!lenis)return;gsap.ticker.remove(lenisTick);lenis.destroy();lenis=null;root.classList.remove('lenis','lenis-smooth','lenis-stopped');}
 function scrollToY(y){if(lenis)lenis.scrollTo(y,{duration:1.5,easing:t=>1-Math.pow(1-t,4)});else window.scrollTo({top:y,behavior:motionOff?'instant':'smooth'});}
 const maxScroll=()=>Math.max(0,document.documentElement.scrollHeight-innerHeight);
