@@ -4,7 +4,21 @@ Photo-led trip site for the 9-16 January 2027 week in Val Thorens: the apartment
 
 Live: https://jasonxu8693.github.io/ski-2027-resort-explorer/
 
+## Phone companion · 14 October 2026
+
+Phones now open a purpose-built native-scroll companion: **Home, Places, Saved, Trip**. All 25 existing places can be searched and filtered, and all seven guide chapters open as reading pages. Favourites are personal localStorage data, clearly separate from the shared bookings. Desktop retains the gondola journey and gains a **Browse places** entry into the same directory.
+
+Trip details have a section selector, independently remembered reading positions, labelled mobile tables and per-person booking cards with an optional person filter. The nine original panels, source data and shared Supabase handlers are preserved. Full-height place details keep their title, map and main link reachable. Browser Back closes a photo first, then its place; direct links also work on fresh entry.
+
+`index.html` still contains all CSS and JavaScript and opens directly from disk alongside the existing images. No runtime build, package installation or server is required. The companion's editable source is kept in `mobile-explorer.css` / `.js` and `mobile-trip.css` / `.js`. After editing those, run `node build-ui.cjs` to embed them in `index.html`; `node verify-ui.cjs` checks syntax, embedding and unchanged original data/shared-store code against the last commit.
+
+Phone animations use brief transform/opacity transitions. The phone companion does not run the scenic snow, Lenis or scroll-driven gondola animation. Both the system reduced-motion preference and the Motion control are respected. Research dates and unconfirmed prices remain visible; older Costs/Food comparisons have explicit reference notices.
+
+See `docs/design-review.md` and `docs/trip-detail-mobile-audit.md` for the audit, design references, verification and remaining device-test limits.
+
 ## Structure
+
+The following describes the original scenic layers; the phone companion supersedes their presentation on small screens.
 
 1. Hero over a real Val Thorens photograph (Florian Pepellin, CC BY-SA 4.0, credited on the page).
 2. Story stage: the hero photograph parts like a pair of doors onto three close-ups with a panel each - where we stay, how we get there, beyond Val Thorens. One sticky viewport over a long scroll track; JS writes CSS custom properties per frame (`--split`, `--sp1..3`, `--dof`, `--sb1..3`, per-panel `--o`/`--y`) and CSS turns them into transform / opacity (filter blur on fine-pointer devices only).

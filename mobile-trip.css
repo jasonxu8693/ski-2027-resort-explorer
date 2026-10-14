@@ -1,0 +1,110 @@
+/* Trip tools: retain the original controls and shared-state handlers. */
+.mt-trip-jump,.mt-booking-state,.mt-person-summary,.mt-remove-label,.mt-booking-filter,.mt-booking-empty{display:none}
+.mt-reference-note{padding:13px 15px;margin:0 0 18px;border:1px solid #e5d6b9;border-left:3px solid #a67330;border-radius:10px;background:#fff9ee;color:#6f542d;font-size:13px;line-height:1.6}
+.mt-reference-note strong{display:block;margin:0 0 3px;font-size:12px;letter-spacing:.02em;color:#684a24}
+.mt-reference-note p{margin:0}
+#tripDialog .trip-data .kv b{color:#102a3b}
+html.mobile-ui #tripDialog{position:fixed;inset:0;width:100%;max-width:none;height:100dvh;max-height:100dvh;margin:0;border:0;border-radius:0;padding:0;overflow:hidden;background:#f3f6f7;transform:none;box-shadow:none}
+html.mobile-ui #tripDialog[open]{display:flex;flex-direction:column}
+html.mobile-ui #tripDialog::backdrop{background:#102a3b99;backdrop-filter:none}
+html.mobile-ui #tripDialog .trip-header{position:relative;flex:none;z-index:3;padding:calc(18px + env(safe-area-inset-top,0px)) 20px 14px;background:#fff;border-bottom:1px solid #dce5e9}
+html.mobile-ui #tripDialog .trip-header h2{font:400 28px/1.15 Georgia,serif;letter-spacing:-.04em;margin:0;padding-right:64px}
+html.mobile-ui #tripDialog .trip-header>p{display:none}
+html.mobile-ui #tripDialog #closeTrip{top:calc(12px + env(safe-area-inset-top,0px));right:14px;min-width:48px;min-height:48px;background:#eef3f5;box-shadow:none;border:1px solid #dce5e9;font-size:27px}
+html.mobile-ui #tripDialog .trip-tabs{display:none}
+html.mobile-ui #tripDialog .mt-trip-jump{display:block;margin-top:18px}
+html.mobile-ui #tripDialog .mt-jump-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:7px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#526b79}
+html.mobile-ui #tripDialog .mt-jump-heading output{font-variant-numeric:tabular-nums;white-space:nowrap}
+html.mobile-ui #tripDialog .mt-trip-jump select{display:block;width:100%;min-height:50px;padding:11px 42px 11px 14px;font:600 16px/1.4 Inter,system-ui,sans-serif;appearance:none;-webkit-appearance:none;border:1px solid #ccdce4;border-radius:12px;color:#102a3b;background:#f4f8f9 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24'%3E%3Cpath d='m6 9 6 6 6-6' fill='none' stroke='%23102a3b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 15px center}
+html.mobile-ui #tripDialog .mt-section-description{display:block;margin:8px 0 0;font-size:12px;line-height:1.4;color:#567080}
+html.mobile-ui #tripDialog .trip-data{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;scroll-behavior:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;padding:24px 20px calc(32px + env(safe-area-inset-bottom,0px));scroll-padding-top:16px;overflow-wrap:anywhere}
+html.mobile-ui #tripDialog .panel{min-width:0}
+html.mobile-ui #tripDialog .panel.on{display:block}
+html.mobile-ui #tripDialog .trip-data h2{font:400 30px/1.12 Georgia,serif;letter-spacing:-.035em;margin:0 0 12px}
+html.mobile-ui #tripDialog .trip-data h3{font-size:16px;line-height:1.45;margin-bottom:12px}
+html.mobile-ui #tripDialog .trip-data .sec{margin:0 0 28px}
+html.mobile-ui #tripDialog .trip-data .lede{font-size:15px;line-height:1.65;margin-top:0}
+html.mobile-ui #tripDialog .trip-data .note,html.mobile-ui #tripDialog .trip-data .clean{font-size:14px;line-height:1.65}
+html.mobile-ui #tripDialog .trip-data .card{padding:18px;border-radius:16px;box-shadow:0 3px 12px #102a3b04}
+html.mobile-ui #tripDialog .trip-data .grid{grid-template-columns:minmax(0,1fr);gap:12px}
+html.mobile-ui #tripDialog .trip-data .grid>.card{margin:0;min-width:0}
+html.mobile-ui #tripDialog #p9>.sec>.grid.g3{grid-template-columns:repeat(2,minmax(0,1fr))}
+html.mobile-ui #tripDialog #p9>.sec>.grid.g3>.card{padding:15px}
+html.mobile-ui #tripDialog #p9 .mtr{font-size:34px}
+html.mobile-ui #tripDialog .trip-data .kv{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;padding:11px 0;border-bottom:1px solid #e6edf0;font-size:14px;align-items:start}
+html.mobile-ui #tripDialog .trip-data .kv>span{min-width:0}
+html.mobile-ui #tripDialog .trip-data .kv>span:last-child{text-align:right}
+html.mobile-ui #tripDialog .trip-data .kvw{grid-template-columns:82px minmax(0,1fr)}
+html.mobile-ui #tripDialog .trip-data .kvw>span:last-child{text-align:left}
+html.mobile-ui #tripDialog .trip-data .kvw>span:first-child{min-width:0}
+html.mobile-ui #tripDialog .trip-data .num{white-space:normal}
+html.mobile-ui #tripDialog .trip-data .badge-v,html.mobile-ui #tripDialog .trip-data .badge-n,html.mobile-ui #tripDialog .trip-data .chip{display:inline-block;font-size:10px;line-height:1.45;vertical-align:middle;margin:3px 0;letter-spacing:.02em;white-space:normal}
+html.mobile-ui #tripDialog .trip-data .act{display:grid;grid-template-columns:24px minmax(0,1fr);gap:7px 10px;padding:0 0 16px;border-bottom:1px solid #e6edf0}
+html.mobile-ui #tripDialog .trip-data .act .body{min-width:0}
+html.mobile-ui #tripDialog .trip-data .act .due{grid-column:2;justify-self:start;white-space:normal}
+html.mobile-ui #tripDialog .trip-data .act:last-child{padding-bottom:0;border:0}
+html.mobile-ui #tripDialog .trip-data .btn,html.mobile-ui #tripDialog .trip-data .btn.sm,html.mobile-ui #tripDialog .trip-data .f-in,html.mobile-ui #tripDialog .trip-data .linkish,html.mobile-ui #tripDialog .trip-data .x-btn{min-height:46px;font-size:16px;line-height:1.4;max-width:100%;border-radius:10px}
+html.mobile-ui #tripDialog .trip-data .f-in{padding:11px 12px}
+html.mobile-ui #tripDialog .trip-data .btn{padding:11px 14px}
+html.mobile-ui #tripDialog .trip-data .task{border-radius:14px;padding:14px;background:#fff}
+html.mobile-ui #tripDialog .trip-data .task .tick{grid-template-columns:24px minmax(0,1fr);gap:12px;min-height:46px}
+html.mobile-ui #tripDialog .trip-data .task .t{font-size:15px;line-height:1.4}
+html.mobile-ui #tripDialog .trip-data .task .due{font-size:11px;line-height:1.5;letter-spacing:.04em}
+html.mobile-ui #tripDialog .trip-data .task .w{display:none;padding-left:36px;font-size:14px}
+html.mobile-ui #tripDialog .trip-data .task.open .w{display:block}
+html.mobile-ui #tripDialog .trip-data .task .more{display:block;min-height:44px;font-size:13px;padding:9px 0 4px 36px}
+html.mobile-ui #tripDialog .trip-data .cnt{font-size:12px;display:inline-block;margin-left:4px}
+html.mobile-ui #tripDialog .trip-data .rsvp-tools{gap:10px}
+html.mobile-ui #tripDialog .trip-data .rsvp-tools>.btn{flex:1 1 45%;font-size:14px}
+html.mobile-ui #tripDialog .trip-data .rsvp-tools>.synced,html.mobile-ui #tripDialog .trip-data .rsvp-tools>.saved{flex:1 1 100%;font-size:12px}
+html.mobile-ui #tripDialog .trip-data .hcbar{gap:10px}
+html.mobile-ui #tripDialog .trip-data .hcbar input{width:76px}
+/* Labelled records retain real table headers and original controls in the DOM. */
+html.mobile-ui #tripDialog .tbl-wrap,html.mobile-ui #tripDialog .bk-wrap{overflow:visible;border:0;background:transparent;border-radius:0}
+html.mobile-ui #tripDialog .mt-table,html.mobile-ui #tripDialog .mt-bookings{display:block;width:100%;min-width:0;border:0;font-size:14px}
+html.mobile-ui #tripDialog .mt-table>thead,html.mobile-ui #tripDialog .mt-bookings>thead{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+html.mobile-ui #tripDialog .mt-table>tbody,html.mobile-ui #tripDialog .mt-bookings>tbody{display:grid;gap:12px}
+html.mobile-ui #tripDialog .mt-table>tbody>tr{display:block;background:#fff;border:1px solid #dce5e9;border-radius:14px;padding:15px;min-width:0}
+html.mobile-ui #tripDialog .mt-table>tbody>tr>td{display:grid;grid-template-columns:minmax(66px,34%) minmax(0,1fr);gap:12px;border:0;border-top:1px solid #edf1f3;padding:9px 0;text-align:left;white-space:normal;min-width:0;vertical-align:top}
+html.mobile-ui #tripDialog .mt-table>tbody>tr>td::before{content:attr(data-label);font-size:11px;font-weight:600;line-height:1.55;color:#557080;padding-top:2px}
+html.mobile-ui #tripDialog .mt-table>tbody>tr>td:first-child{display:block;border:0;padding:0 0 10px;font-size:15px;font-weight:600;color:#102a3b}
+html.mobile-ui #tripDialog .mt-table>tbody>tr>td:first-child::before{display:none}
+html.mobile-ui #tripDialog .mt-cell-value{display:block;min-width:0;overflow-wrap:anywhere}
+html.mobile-ui #tripDialog .mt-table>tbody>tr.win{border-left:3px solid #3c8569}
+html.mobile-ui #tripDialog .mt-table>tbody>tr.dead{border-left:3px solid #b66146}
+html.mobile-ui #tripDialog .rsvp>tbody>tr>td{display:block;padding:10px 0 0;border:0}
+html.mobile-ui #tripDialog .rsvp>tbody>tr>td::before{display:block;margin:0 0 6px;font-size:12px}
+html.mobile-ui #tripDialog .rsvp>tbody>tr>td:first-child{padding:0}
+html.mobile-ui #tripDialog .rsvp>tbody>tr>td:first-child .f-in{font-weight:700}
+html.mobile-ui #tripDialog .rsvp>tbody>tr>td:last-child::before{display:none}
+html.mobile-ui #tripDialog .rsvp .x-btn{display:flex;align-items:center;gap:8px;font-size:21px;min-height:44px;padding:7px 10px;color:#a30d24;background:#fff3f5}
+html.mobile-ui #tripDialog .mt-remove-label{display:inline;font-size:13px;pointer-events:none}
+/* One traveller per card; booking states remain the original shared controls. */
+html.mobile-ui #tripDialog .mt-booking-filter{display:block;margin:18px 0 14px}
+html.mobile-ui #tripDialog .mt-booking-filter label{display:block;margin:0 0 7px;font-size:12px;font-weight:600;color:#557080}
+html.mobile-ui #tripDialog .mt-booking-filter select{width:100%;min-height:48px;border:1px solid #ccdce4;border-radius:11px;padding:10px 12px;background:white;color:#102a3b;font-size:16px}
+html.mobile-ui #tripDialog .mt-booking-empty{display:block;padding:18px;border:1px dashed #bfd1da;border-radius:14px;background:white;font-size:14px;line-height:1.6;color:#557080}
+html.mobile-ui #tripDialog .mt-bookings>tbody>tr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:16px;background:#fff;border:1px solid #dce5e9;border-radius:16px;min-width:0}
+html.mobile-ui #tripDialog .mt-bookings>tbody>tr.mt-person-hidden{display:none}
+html.mobile-ui #tripDialog .mt-bookings>tbody>tr>td{display:flex;flex-direction:column;align-items:stretch;gap:5px;min-width:0;position:static;padding:0;border:0;text-align:left;background:none}
+html.mobile-ui #tripDialog .mt-bookings>tbody>tr>td:not(.nm)::before{content:attr(data-label);font-size:11px;line-height:1.4;font-weight:600;color:#557080;min-height:16px}
+html.mobile-ui #tripDialog .mt-bookings>tbody>tr>td.nm{grid-column:1/-1;display:flex;flex-direction:row;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:4px;padding:0 0 12px;border-bottom:1px solid #e6edf0;white-space:normal;font-size:18px;line-height:1.3}
+html.mobile-ui #tripDialog .mt-bookings .sport{margin:0 0 0 auto;padding:11px 14px;min-width:62px;min-height:44px;font-size:12px;letter-spacing:.02em;border:1px solid #c7d8e3}
+html.mobile-ui #tripDialog .mt-bookings .sport::before,html.mobile-ui #tripDialog .mt-bookings .bkc::before,html.mobile-ui #tripDialog .mt-bookings .bka::before{display:none}
+html.mobile-ui #tripDialog .mt-person-summary{display:block;flex:1 1 100%;font-size:12px;font-weight:400;color:#587182}
+html.mobile-ui #tripDialog .mt-bookings .bkc{display:flex;align-items:center;gap:8px;width:100%;height:auto;min-height:48px;margin:0;padding:10px;border:1px solid #dce5e9;border-radius:10px;background:#f6f9fa;text-align:left;font-size:12px;line-height:1.35}
+html.mobile-ui #tripDialog .mt-bookings .bkc i{flex:0 0 22px;width:22px;height:22px;border-radius:7px;font-size:12px}
+html.mobile-ui #tripDialog .mt-booking-state{display:block;min-width:0}
+html.mobile-ui #tripDialog .mt-bookings .bkc.s1{background:#edf7f2;border-color:#bbd8c8;color:#146147}
+html.mobile-ui #tripDialog .mt-bookings .bkc.s2{background:#f0f3f5;border-color:#dce5e9;color:#526b79}
+html.mobile-ui #tripDialog .mt-bookings .bkd{margin:0;font-size:0;line-height:1.4;font-weight:500;color:#526b79}
+html.mobile-ui #tripDialog .mt-bookings .bkd::after{content:attr(data-days);font-size:11px}
+html.mobile-ui #tripDialog .mt-bookings .bka{margin:0;width:100%;min-height:48px;height:auto;line-height:1.35;padding:13px 10px;font-size:15px;text-align:left;border-radius:10px}
+html.mobile-ui #tripDialog .mt-bookings .bka.host{display:flex;align-items:center;background:#f6f9fa;border:1px solid #e6edf0;font-size:13px}
+html.mobile-ui #tripDialog .mt-bookings>tfoot{display:block;margin:16px 0 0;padding:16px;border:1px solid #dce5e9;border-radius:14px;background:#edf3f6}
+html.mobile-ui #tripDialog .mt-bookings>tfoot>tr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+html.mobile-ui #tripDialog .mt-bookings>tfoot td{display:block;position:static;background:none;padding:0;border:0;font-size:15px;text-align:left;white-space:normal}
+html.mobile-ui #tripDialog .mt-bookings>tfoot td::before{content:attr(data-label);display:block;font-size:11px;line-height:1.5;color:#557080;font-weight:400}
+html.mobile-ui #tripDialog .mt-bookings>tfoot td.nm{grid-column:1/-1;font-weight:700;font-size:15px}
+html.mobile-ui #tripDialog .mt-bookings>tfoot td.nm::before{display:none}
+@media(max-width:359px){html.mobile-ui #tripDialog .trip-header{padding-left:16px;padding-right:16px}html.mobile-ui #tripDialog .trip-data{padding-left:16px;padding-right:16px}html.mobile-ui #tripDialog .trip-data .card{padding:14px}html.mobile-ui #tripDialog .mt-bookings>tbody>tr{padding:13px;gap:9px}html.mobile-ui #tripDialog .mt-bookings .bkc{padding:9px 7px;gap:6px;font-size:11px}}
