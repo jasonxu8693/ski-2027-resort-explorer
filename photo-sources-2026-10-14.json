@@ -1,0 +1,231 @@
+{
+  "checked": "2026-10-14",
+  "note": "Source and credit are recorded; official promotional photos are not represented as openly licensed. CC BY-SA 4.0 applies only where stated; licence: https://creativecommons.org/licenses/by-sa/4.0/.",
+  "photos": [
+    {
+      "id": "vt-beginner",
+      "photos": [
+        "images/val-thorens-beginner-lesson.webp"
+      ],
+      "photoSource": "https://ski.valthorens.com/en/beginners/",
+      "photoCredit": "Val Thorens lift operator / ESF beginner guide",
+      "photoCaption": "Beginner lesson pictured in Val Thorens’ official guide — context photo; the Musaraigne and Campagnols carpets are not shown.",
+      "photoCaptions": [
+        "Beginner lesson pictured in Val Thorens’ official guide — context photo; the Musaraigne and Campagnols carpets are not shown."
+      ],
+      "galleryImported": "2026-10-14",
+      "provenance": {
+        "placeId": "vt-beginner",
+        "file": "beginner-official.jpg",
+        "imageUrl": "https://ski.valthorens.com/wp-content/uploads/2020/08/XVM01119d92-466e-11e9-8f2f-f544bbea872a.jpg",
+        "sourceUrl": "https://ski.valthorens.com/en/beginners/",
+        "author": null,
+        "license": "Official lift-operator promotional image labelled ESF débutant; photographer and reusable licence not identified.",
+        "licenseUrl": null,
+        "caption": "Beginner lesson pictured in Val Thorens' official guide",
+        "visualCheck": "Adult learner with ESF instructor on gentle snow, 680 x 382. The named Musaraigne/Campagnols carpets are NOT shown; contextual lesson photo only.",
+        "recommended": "contextual fallback only"
+      },
+      "dimensions": [
+        680,
+        382
+      ],
+      "bytes": 29694
+    },
+    {
+      "id": "vt-plein-sud",
+      "photos": [
+        "images/val-thorens-pionniers-piste.webp"
+      ],
+      "photoSource": "https://commons.wikimedia.org/wiki/File:Piste_de_ski_des_Pionniers_enneig%C3%A9e_%C3%A0_Val_Thorens_(avril_2022).JPG",
+      "photoCredit": "Florian Pépellin · CC BY-SA 4.0 · resized and converted to WebP",
+      "photoCaption": "Pionniers piste and chairlift, April 2022.",
+      "photoCaptions": [
+        "Pionniers piste and chairlift, April 2022."
+      ],
+      "galleryImported": "2026-10-14",
+      "provenance": {
+        "placeId": "vt-plein-sud",
+        "file": "pionniers.jpg",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/7/79/Piste_de_ski_des_Pionniers_enneig%C3%A9e_%C3%A0_Val_Thorens_%28avril_2022%29.JPG",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Piste_de_ski_des_Pionniers_enneig%C3%A9e_%C3%A0_Val_Thorens_(avril_2022).JPG",
+        "author": "Florian Pépellin",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "caption": "Pionniers piste and chairlift in Val Thorens, April 2022",
+        "visualCheck": "Chairlift and snowy piste match the Commons subject; no unrelated venue.",
+        "recommended": true
+      },
+      "dimensions": [
+        1440,
+        1080
+      ],
+      "bytes": 109184
+    },
+    {
+      "id": "mer-folie",
+      "photos": [
+        "images/meribel-folie-douce-terrace.webp"
+      ],
+      "photoSource": "https://www.meribel.net/apidae/la-folie-douce-meribel-courchevel/",
+      "photoCredit": "Official Méribel tourism listing",
+      "photoCaption": "Dining terrace at La Folie Douce Méribel-Courchevel.",
+      "photoCaptions": [
+        "Dining terrace at La Folie Douce Méribel-Courchevel."
+      ],
+      "galleryImported": "2026-10-14",
+      "provenance": {
+        "placeId": "mer-folie",
+        "file": "meribel-terrace.png",
+        "imageUrl": "https://www.meribel.net/content/uploads/hello-images/size-990x522/quality-80/2-min__7053.png",
+        "sourceUrl": "https://www.meribel.net/apidae/la-folie-douce-meribel-courchevel/",
+        "author": null,
+        "license": "No reusable licence or named photographer identified on the official tourism listing; do not label Creative Commons or freely licensed.",
+        "licenseUrl": null,
+        "caption": "Dining terrace at La Folie Douce Méribel-Courchevel — official Méribel tourism listing",
+        "visualCheck": "White-clothed dining tables on wooden terrace, opposite snowy mountains; exact venue listing, 990 x 522.",
+        "recommended": true
+      },
+      "dimensions": [
+        990,
+        522
+      ],
+      "bytes": 154710
+    },
+    {
+      "id": "vt-sherpa-balcons",
+      "photos": [
+        "images/sherpa-balcons-entrance.webp"
+      ],
+      "photoSource": "https://www.sherpa.net/en/stores/val-thorens-balcons",
+      "photoCredit": "Sherpa · official Val Thorens–Balcons store page",
+      "photoCaption": "Entrance to Sherpa des Balcons, Val Thorens.",
+      "photoCaptions": [
+        "Entrance to Sherpa des Balcons, Val Thorens."
+      ],
+      "galleryImported": "2026-10-14",
+      "provenance": {
+        "venue": "Sherpa des Balcons",
+        "file": "sherpa-balcons-official.jpg",
+        "source_page": "https://www.sherpa.net/en/stores/val-thorens-balcons",
+        "image_url": "https://www.sherpa.net/sites/default/files/styles/magasin_image_principale_lcp/public/magasins/supermarch%C3%A9%20sherpa%20Val%20Thorens%20-%20balcons%20entree.jpg?itok=wT3nVaCk",
+        "caption": "Entrance to Sherpa des Balcons, Val Thorens",
+        "dimensions": [
+          656,
+          400
+        ],
+        "pixel_check": "Sherpa signs on timber storefront and windows; snow outside. No visible watermark.",
+        "credit": "Source: Sherpa official Val Thorens–Balcons store page. Individual photographer not named.",
+        "rights": "No open reuse license established. Sherpa legal page names Sherpa S.A. Coopérative as publisher; publisher identity is not a specific photo copyright assignment.",
+        "rights_source": "https://www.sherpa.net/mentions-legales"
+      },
+      "dimensions": [
+        656,
+        400
+      ],
+      "bytes": 46748
+    },
+    {
+      "id": "vt-intersport",
+      "photos": [
+        "images/intersport-balcons-storefront.webp"
+      ],
+      "photoSource": "https://www.valthorens.com/en/commerce-service/intersport-les-balcons/",
+      "photoCredit": "© Intersport Les Balcons · official Val Thorens tourism listing",
+      "photoCaption": "Intersport Bas des Balcons storefront, Val Thorens.",
+      "photoCaptions": [
+        "Intersport Bas des Balcons storefront, Val Thorens."
+      ],
+      "galleryImported": "2026-10-14",
+      "provenance": {
+        "venue": "Intersport Les Balcons",
+        "file": "intersport-balcons-official.webp",
+        "source_page": "https://www.valthorens.com/en/commerce-service/intersport-les-balcons/",
+        "image_url": "https://cdn.iris-etourism.io/media/val_thorens/6407994/d6a1e1c2cd40108d-800x520.webp",
+        "caption": "Intersport Les Balcons storefront, Val Thorens",
+        "dimensions": [
+          800,
+          520
+        ],
+        "pixel_check": "Intersport sign over entrance beneath stone arch; clear storefront. No visible watermark.",
+        "credit": "© Intersport Les Balcons",
+        "rights": "Specific photo credit supplied by official tourism page. No open reuse license established.",
+        "identity_evidence": "Official tourism listing uses Les Balcons name and 04 79 00 90 80, matching the Bas des Balcons/Chalet 1 branch in Intersport's directory; not Caron.",
+        "identity_source": "https://www.intersport-rent.fr/fr/stations-ski/tarentaise/val-thorens"
+      },
+      "dimensions": [
+        800,
+        520
+      ],
+      "bytes": 110532
+    },
+    {
+      "id": "vt-carrefour-caron",
+      "photos": [
+        "images/carrefour-caron-arcelle.webp"
+      ],
+      "photoSource": "https://www.alpineimmo.com/en/residence-arcelle.html",
+      "photoCredit": "Alpine Immo · Résidence Arcelle gallery",
+      "photoCaption": "Carrefour Montagne at Résidence L’Arcelle. Opening hours visible in this photograph may be historical.",
+      "photoCaptions": [
+        "Carrefour Montagne at Résidence L’Arcelle. Opening hours visible in this photograph may be historical."
+      ],
+      "galleryImported": "2026-10-14",
+      "provenance": {
+        "venue": "Carrefour Montagne Caron",
+        "file": "carrefour-caron-arcelle.jpg",
+        "source_page": "https://www.alpineimmo.com/en/residence-arcelle.html",
+        "image_url": "https://images-be1.alfaconceptproxy.com/imageproxy//9-PK5j523RB2bK-OWSQiiE5cREH3Xcw_iEitAif4Ao0/w%3A1024/h%3A768/rt%3Afill/bG9jYWw6Ly8vc3RvcmFnZV9uYXNfMDEvaW1tb2JpbGllci9yZXNpZGVuY2VzLy9kem5lb2pTbDhZcU1JczNGV016c014ZEJINTJKL2Rlc2NyaXB0aWYvaW1hZ2VzX3RlbXAvX09LXzAwXzYxZTkwYjYzXzBfMF8uanBn",
+        "caption": "Carrefour Montagne at Résidence L’Arcelle, Val Thorens",
+        "dimensions": [
+          910,
+          768
+        ],
+        "pixel_check": "Clearly visible Carrefour Montagne signs beside L’Arcelle entrance. No visible watermark. Historic opening hours are visible in photograph; do not transcribe them as current information.",
+        "credit": "Source: Alpine Immo, Résidence Arcelle gallery. Individual photographer not assigned.",
+        "rights": "Site legal page states All rights reserved. Sitewide photo credits list O.T de Val Thorens, T. Loubere, P. Morel, P. Lebeau and P. Hemsi Counil; no per-image assignment. No open reuse license established.",
+        "rights_source": "https://www.alpineimmo.com/en/legal.html",
+        "identity_source": "https://www.carrefour.fr/magasin/montagne-val-thorens"
+      },
+      "dimensions": [
+        910,
+        768
+      ],
+      "bytes": 129826
+    },
+    {
+      "id": "vt-carrefour-peclet",
+      "photos": [
+        "images/carrefour-peclet-square.webp"
+      ],
+      "photoSource": "https://www.valthorens.com/en/agenda-manifestation/fete-de-peclet/",
+      "photoCredit": "© T.Loubère · Val Thorens tourism",
+      "photoCaption": "Place Péclet, with Carrefour Montagne beside Le Portillo — wide view during a summer event.",
+      "photoCaptions": [
+        "Place Péclet, with Carrefour Montagne beside Le Portillo — wide view during a summer event."
+      ],
+      "galleryImported": "2026-10-14",
+      "provenance": {
+        "venue": "Carrefour Montagne Péclet",
+        "file": "peclet-square-context-official.webp",
+        "source_page": "https://www.valthorens.com/en/agenda-manifestation/fete-de-peclet/",
+        "image_url": "https://cdn.iris-etourism.io/uploads/val_thorens/66d/147-32-32645267.webp",
+        "caption": "Place Péclet, with Carrefour Montagne beside Le Portillo",
+        "dimensions": [
+          1600,
+          1067
+        ],
+        "pixel_check": "Wide dusk event photo of Place Péclet. Carrefour Montagne and Supermarket signs visible across square beneath Le Portillo near centre. No visible watermark.",
+        "credit": "© T.Loubère",
+        "rights": "Specific photo credit supplied by official tourism page. No open reuse license established.",
+        "usage_note": "Contextual wide view, not a close storefront photo. Keep the square/context caption visible; do not label as a supermarket interior or winter scene.",
+        "identity_source": "https://www.carrefour.fr/magasin/montagne-val-thorens-peclet"
+      },
+      "dimensions": [
+        1440,
+        960
+      ],
+      "bytes": 222984
+    }
+  ]
+}
