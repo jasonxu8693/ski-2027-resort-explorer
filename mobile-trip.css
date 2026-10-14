@@ -1,5 +1,5 @@
 /* Trip tools: retain the original controls and shared-state handlers. */
-.mt-trip-jump,.mt-booking-state,.mt-person-summary,.mt-remove-label,.mt-booking-filter,.mt-booking-empty{display:none}
+.mt-trip-jump,.mt-booking-state,.mt-person-summary,.mt-remove-label,.mt-booking-filter,.mt-booking-empty,.mt-inline-header{display:none}
 .mt-reference-note{padding:13px 15px;margin:0 0 18px;border:1px solid #e5d6b9;border-left:3px solid #a67330;border-radius:10px;background:#fff9ee;color:#6f542d;font-size:13px;line-height:1.6}
 .mt-reference-note strong{display:block;margin:0 0 3px;font-size:12px;letter-spacing:.02em;color:#684a24}
 .mt-reference-note p{margin:0}
@@ -83,6 +83,7 @@ html.mobile-ui #tripDialog .mt-remove-label{display:inline;font-size:13px;pointe
 html.mobile-ui #tripDialog .mt-booking-filter{display:block;margin:18px 0 14px}
 html.mobile-ui #tripDialog .mt-booking-filter label{display:block;margin:0 0 7px;font-size:12px;font-weight:600;color:#557080}
 html.mobile-ui #tripDialog .mt-booking-filter select{width:100%;min-height:48px;border:1px solid #ccdce4;border-radius:11px;padding:10px 12px;background:white;color:#102a3b;font-size:16px}
+html.mobile-ui #tripDialog .mt-filter-scope{display:block;margin:7px 0 0;font-size:11px;line-height:1.5;color:#587182}
 html.mobile-ui #tripDialog .mt-booking-empty{display:block;padding:18px;border:1px dashed #bfd1da;border-radius:14px;background:white;font-size:14px;line-height:1.6;color:#557080}
 html.mobile-ui #tripDialog .mt-bookings>tbody>tr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:16px;background:#fff;border:1px solid #dce5e9;border-radius:16px;min-width:0}
 html.mobile-ui #tripDialog .mt-bookings>tbody>tr.mt-person-hidden{display:none}
@@ -108,3 +109,38 @@ html.mobile-ui #tripDialog .mt-bookings>tfoot td::before{content:attr(data-label
 html.mobile-ui #tripDialog .mt-bookings>tfoot td.nm{grid-column:1/-1;font-weight:700;font-size:15px}
 html.mobile-ui #tripDialog .mt-bookings>tfoot td.nm::before{display:none}
 @media(max-width:359px){html.mobile-ui #tripDialog .trip-header{padding-left:16px;padding-right:16px}html.mobile-ui #tripDialog .trip-data{padding-left:16px;padding-right:16px}html.mobile-ui #tripDialog .trip-data .card{padding:14px}html.mobile-ui #tripDialog .mt-bookings>tbody>tr{padding:13px;gap:9px}html.mobile-ui #tripDialog .mt-bookings .bkc{padding:9px 7px;gap:6px;font-size:11px}}
+
+/* Embedded trip section: the parent shell owns height and the permanent navigation. */
+html.mobile-ui #tripDialog.mx-inline-trip,
+body.directory-open #tripDialog.mx-inline-trip{position:relative;inset:auto;align-self:stretch;flex:1 1 auto;width:100%;max-width:none;height:100%;min-height:0;max-height:none;margin:0;padding:0;border:0;border-radius:0;overflow:hidden;background:#f3f6f7;box-shadow:none;transform:none!important;opacity:1!important;animation:none}
+html.mobile-ui #tripDialog.mx-inline-trip[open],
+body.directory-open #tripDialog.mx-inline-trip[open]{display:flex;flex-direction:column}
+html.mobile-ui #tripDialog.mx-inline-trip:not([open]),
+body.directory-open #tripDialog.mx-inline-trip:not([open]){display:none}
+html.mobile-ui #tripDialog.mx-inline-trip::backdrop,
+body.directory-open #tripDialog.mx-inline-trip::backdrop{display:none;background:transparent;backdrop-filter:none}
+html.mobile-ui #tripDialog.mx-inline-trip>.trip-header,
+body.directory-open #tripDialog.mx-inline-trip>.trip-header{display:none}
+html.mobile-ui #tripDialog.mx-inline-trip .mt-trip-jump,
+body.directory-open #tripDialog.mx-inline-trip .mt-trip-jump,
+html.mobile-ui #tripDialog.mx-inline-trip #closeTrip,
+body.directory-open #tripDialog.mx-inline-trip #closeTrip,
+html.mobile-ui #tripDialog.mx-inline-trip .trip-tabs,
+body.directory-open #tripDialog.mx-inline-trip .trip-tabs{display:none}
+html.mobile-ui #tripDialog.mx-inline-trip>.mt-inline-header,
+body.directory-open #tripDialog.mx-inline-trip>.mt-inline-header{display:block;position:relative;flex:none;z-index:2;padding:7px 20px 18px;background:#fff;border-bottom:1px solid #dce5e9}
+html.mobile-ui #tripDialog.mx-inline-trip .mt-inline-back,
+body.directory-open #tripDialog.mx-inline-trip .mt-inline-back{display:inline-flex;align-items:center;justify-content:flex-start;gap:4px;min-height:44px;min-width:44px;margin:0 0 4px -9px;padding:10px 9px;border:0;border-radius:8px;background:transparent;color:#365b6b;font:600 13px/1.4 Inter,system-ui,sans-serif;text-align:left;cursor:pointer}
+html.mobile-ui #tripDialog.mx-inline-trip .mt-inline-back svg,
+body.directory-open #tripDialog.mx-inline-trip .mt-inline-back svg{display:block;flex:0 0 18px;width:18px;height:18px}
+html.mobile-ui #tripDialog.mx-inline-trip .mt-inline-back:hover,
+body.directory-open #tripDialog.mx-inline-trip .mt-inline-back:hover{background:#edf3f5;color:#102a3b}
+html.mobile-ui #tripDialog.mx-inline-trip .mt-inline-title,
+body.directory-open #tripDialog.mx-inline-trip .mt-inline-title{margin:0 0 6px;padding:0;font:400 30px/1.15 Georgia,serif;letter-spacing:-.035em;color:#102a3b;overflow-wrap:anywhere}
+html.mobile-ui #tripDialog.mx-inline-trip .mt-inline-description,
+body.directory-open #tripDialog.mx-inline-trip .mt-inline-description{display:block;margin:0;max-width:65ch;font:400 12px/1.5 Inter,system-ui,sans-serif;color:#567080}
+html.mobile-ui #tripDialog.mx-inline-trip>.trip-data,
+body.directory-open #tripDialog.mx-inline-trip>.trip-data{position:relative;flex:1 1 auto;align-self:center;min-height:0;width:100%;max-width:1000px;overflow:auto;overscroll-behavior:contain;scroll-behavior:auto;touch-action:pan-y;-webkit-overflow-scrolling:touch;padding:20px 20px 28px;scroll-padding-top:16px}
+html.mobile-ui #tripDialog.mx-inline-trip .panel>.sec:first-child>h2:first-child,
+body.directory-open #tripDialog.mx-inline-trip .panel>.sec:first-child>h2:first-child{display:none}
+@media(max-width:359px){html.mobile-ui #tripDialog.mx-inline-trip>.mt-inline-header{padding-inline:16px}html.mobile-ui #tripDialog.mx-inline-trip>.trip-data{padding-inline:16px}}

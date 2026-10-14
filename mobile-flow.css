@@ -1,0 +1,106 @@
+/* One persistent navigation shell for the whole trip, including ordinary detail pages. */
+#mobileApp {--mx-ink:#163c49;--mx-muted:#577078;--mx-surface:#f5f6f1;background:var(--mx-surface)}
+#mobileApp .mx-header{height:60px;padding-block:7px;background:var(--mx-surface)}
+#mobileApp.mx-reading>.mx-header{display:none}
+#mobileApp .mx-dock{position:relative;inset:auto;transform:none;width:auto;flex:none;z-index:90;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;min-height:72px;padding:7px 14px max(9px,env(safe-area-inset-bottom));background:#fff;border-top:1px solid #d6e0d9;box-shadow:none}
+#mobileApp .mx-dock button{min-height:55px;border-radius:12px;display:flex;flex-direction:column;gap:5px;padding:6px 4px;font:600 12px/1.2 Inter,system-ui,sans-serif!important;letter-spacing:0;color:#526c74!important}
+#mobileApp .mx-dock button svg{width:23px;height:23px}
+#mobileApp .mx-dock button[aria-current=page]{background:#eaf0dd;color:#173e47!important}
+#mobileApp .mx-dock button[aria-current=page]:before{display:none}
+#mobileApp .mx-dock button:active{transform:none}
+#mobileApp .mx-view{scrollbar-gutter:stable;scroll-padding-top:20px;padding-bottom:28px}
+#mobileApp .mx-wrap{width:min(calc(100% - 36px),960px)}
+#mobileApp .mx-page-head{padding:22px 0 17px}
+#mobileApp .mx-page-head h1{font-size:34px;line-height:1.1;margin:0 0 9px;letter-spacing:-.035em}
+#mobileApp .mx-page-head p{font-size:14px;line-height:1.55;max-width:48ch}
+#mobileApp .mx-kicker{font-size:10px}
+#mobileApp .mx-section-head{margin:26px 0 13px}
+#mobileApp .mx-section-head h2{font:600 18px/1.35 Inter,system-ui,sans-serif;letter-spacing:-.025em}
+.mx-trip-hero{position:relative;overflow:hidden;border-radius:20px;background:#173e50;color:#fff;min-height:180px;display:flex;align-items:flex-end}
+.mx-trip-hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 53%}
+.mx-trip-hero:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#102e4210,#102f43e8)}
+.mx-trip-hero-copy{position:relative;z-index:1;padding:23px 20px;width:100%}
+.mx-trip-hero-copy h1{font:400 40px/1.05 Georgia,serif;letter-spacing:-.045em;margin:0 0 8px}
+.mx-trip-hero-copy p{font-size:13px;line-height:1.5;color:#fff;margin:0}
+.mx-trip-hero-copy .mx-kicker{color:#f1f7f8;margin-bottom:8px}
+.mx-orientation{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0 0}
+.mx-orientation button{display:flex;flex-direction:column;align-items:flex-start;gap:7px;padding:15px;border:1px solid #d3dfd6;border-radius:14px;background:#fff;text-align:left;min-height:105px}
+.mx-orientation svg{width:21px;height:21px;color:#365f68}
+.mx-orientation strong{display:block;font-size:14px;line-height:1.35;font-weight:650}
+.mx-orientation small{display:block;margin-top:5px;font-size:12px;color:#5d7278;line-height:1.45}
+.mx-orientation button>svg:last-child{margin-top:auto;align-self:flex-end;width:17px;height:17px}
+#mobileApp .mx-trip-hero{width:min(calc(100% - 36px),960px);margin:8px auto 0}
+#mobileApp .mx-guide-photo button{display:flex;align-items:center;gap:8px}
+#mobileApp .mx-guide-photo button svg{width:17px;height:17px}
+.mx-plan-group{margin-top:25px}
+.mx-plan-group h2{font:600 18px/1.35 Inter,system-ui,sans-serif;letter-spacing:-.025em;margin:0 0 12px}
+.mx-plan-links{display:grid;gap:9px}
+#mobileApp .mx-trip-grid{margin:0;gap:9px}
+#mobileApp .mx-trip-link{min-height:69px;border-radius:13px;padding:12px 14px;gap:12px;grid-template-columns:30px minmax(0,1fr) 18px}
+#mobileApp .mx-trip-link strong{font-size:15px}
+#mobileApp .mx-trip-link small{font-size:12px;line-height:1.4;margin-top:4px}
+#mobileApp .mx-next{background:#e9eee2;border:1px solid #d4dfc9;border-radius:13px;box-shadow:none;color:#173f44;padding:14px;margin:13px 0 0;gap:12px}
+#mobileApp .mx-next-count{font-size:23px;border-color:#a3b7aa;min-width:48px;padding-right:12px}
+#mobileApp .mx-next-count small{font-size:10px;color:#46645e}
+#mobileApp .mx-next-copy small{font-size:10px;color:#4d6863;letter-spacing:.07em}
+#mobileApp .mx-next-copy strong{font-size:12px}
+#mobileApp .mx-next-copy p{font-size:11px;color:#526b66}
+.mx-collection{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:4px;background:#e6ebe5;border:1px solid #dce3da;border-radius:13px;gap:4px;margin:15px 0}
+.mx-collection button{border:0;min-height:44px;border-radius:9px;background:transparent;color:#49666e;font-size:13px!important;font-weight:600!important;display:flex;align-items:center;justify-content:center;gap:7px;padding:9px}
+.mx-collection button[aria-pressed=true]{background:#fff;color:#173e47;box-shadow:0 1px 4px #173d4b13}
+.mx-collection svg{height:18px;width:18px}
+.mx-collection-count{font-size:11px;min-width:20px;padding:3px 5px;border-radius:6px;background:#e9eee5;font-variant-numeric:tabular-nums}
+#mobileApp .mx-filters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;padding:0;overflow:visible;scroll-snap-type:none}
+#mobileApp .mx-filter{white-space:normal;min-height:44px;padding:8px 4px;border-radius:9px;font-size:11px!important;line-height:1.3}
+#mobileApp .mx-filter-count{display:none}
+#mobileApp .mx-results-meta{font-size:12px;margin:13px 0 15px}
+#mobileApp .mx-region{font-size:14px!important;max-width:180px}
+#mobileApp .mx-place-grid{gap:12px}
+#mobileApp .mx-place{border-radius:16px}
+#mobileApp .mx-place-title{font-size:21px;line-height:1.18}
+#mobileApp .mx-place-type{font-size:9px;letter-spacing:.08em}
+#mobileApp .mx-place-note{font-size:11px;font-weight:500}
+#mobileApp .mx-place-area{font-size:12px}
+#mobileApp .mx-saved-info{margin:0 0 16px;font-size:12px}
+#mobileApp .mx-guide-card{grid-template-columns:78px minmax(0,1fr) 18px;border-radius:15px;min-height:100px;gap:13px}
+#mobileApp .mx-guide-card img{width:78px;height:82px;border-radius:10px}
+#mobileApp .mx-guide-card strong{font:600 15px/1.35 Inter,system-ui,sans-serif;letter-spacing:-.015em}
+#mobileApp .mx-guide-card p{font-size:12px;line-height:1.45;margin-top:5px}
+#mobileApp .mx-guide-card small{font-size:10px}
+#mobileApp .mx-guide-top{padding:7px 18px;gap:10px;background:var(--mx-surface)}
+#mobileApp .mx-guide-step{font-size:11px;line-height:1.4;text-align:right;max-width:50%}
+#mobileApp .mx-back{font-size:13px!important;font-weight:600!important;min-height:44px;text-align:left}
+#mobileApp .mx-guide-content{padding-top:22px}
+#mobileApp .mx-guide-content h1{font-size:32px}
+#mobileApp .mx-guide-content .st-dek{font:15px/1.65 Inter,system-ui,sans-serif}
+#mobileApp .mx-guide-photo{height:220px}
+#mobileApp .mx-guide-next{display:none}
+#mobileApp .mx-guide-action{padding:10px 18px;background:var(--mx-surface)}
+#mobileApp #mxDetail,#mobileApp #mxPanel{display:flex;flex-direction:column;min-height:0;overflow:hidden;padding:0;position:relative}
+html.mobile-ui #propertySheet.mx-inline-place,body.directory-open #propertySheet.mx-inline-place{position:relative;inset:auto;display:flex;flex-direction:column;align-self:center;flex:1;min-height:0;width:100%;height:100%;max-height:none;max-width:1000px;border:0;border-radius:0;box-shadow:none;background:var(--mx-surface);animation:none;transform:none!important;opacity:1!important;z-index:auto}
+html.mobile-ui #propertySheet.mx-inline-place[hidden],body.directory-open #propertySheet.mx-inline-place[hidden]{display:none!important}
+#mobileApp #propertySheet.mx-inline-place .sheet-scroll{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;scroll-padding-top:16px}
+#mobileApp #propertySheet.mx-inline-place .mx-sheet-top{display:grid;grid-template-columns:minmax(0,1fr) 44px 44px;gap:4px 8px;flex:none;padding:7px 18px 12px;background:var(--mx-surface);border-bottom:1px solid #d8e0d9}
+#mobileApp #propertySheet.mx-inline-place .mx-sheet-top>.mx-back{grid-column:1/-1;max-width:100%;width:fit-content;gap:5px;line-height:1.35;padding:8px 0;border:0;border-radius:0;background:none}
+#mobileApp #propertySheet.mx-inline-place .mx-sheet-top>.mx-back svg{width:18px;height:18px;flex:none}
+#mobileApp #propertySheet.mx-inline-place .mx-sheet-top>strong{min-width:0;max-height:none;font:600 17px/1.3 Inter,system-ui,sans-serif;letter-spacing:-.02em;overflow-wrap:anywhere}
+#mobileApp #propertySheet.mx-inline-place .mx-icon{width:44px;height:44px;border-radius:11px}
+#mobileApp #propertySheet.mx-inline-place .sheet-footer{padding:10px 18px 12px;border-top:1px solid #d8e0d9;background:var(--mx-surface);max-height:none;overflow:visible;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+#mobileApp #propertySheet.mx-inline-place .sheet-footer .st-btn{min-height:46px;white-space:normal;font-size:12px;display:flex;align-items:center;justify-content:center;text-align:center}
+#mobileApp #propertySheet.mx-inline-place .close-sheet,#mobileApp #propertySheet.mx-inline-place .sheet-grip{display:none}
+#mobileApp #propertySheet.mx-inline-place .sheet-content{padding:22px 20px}
+#mobileApp #propertySheet.mx-inline-place .detail-text{font-size:15px;line-height:1.65}
+#mobileApp #propertySheet.mx-inline-place .gallery{width:100%;aspect-ratio:4/3;max-height:360px}
+#mobileApp #propertySheet.mx-inline-place .sheet-footer #sheetLinks{display:none}
+#mobileApp #propertySheet.mx-inline-place .mx-sheet-extra-links:not(:empty){display:flex}
+#mobileApp #tripDialog.mx-inline-trip{background:var(--mx-surface)}
+#mobileApp #tripDialog.mx-inline-trip>.mt-inline-header{padding-top:max(7px,env(safe-area-inset-top));padding-bottom:14px;background:var(--mx-surface)}
+#mobileApp #tripDialog.mx-inline-trip .mt-inline-title{font-size:28px}
+#mobileApp #tripDialog.mx-inline-trip>.trip-data{background:var(--mx-surface)}
+#mobileApp .mx-tools{margin-top:20px}
+.mx-toast{bottom:calc(84px + env(safe-area-inset-bottom));z-index:140}
+@media(min-width:601px){#mobileApp .mx-plan-links{grid-template-columns:repeat(3,minmax(0,1fr))}.mx-trip-hero{min-height:230px}.mx-orientation{max-width:none}#mobileApp .mx-guide-list{grid-template-columns:repeat(2,minmax(0,1fr))}#mobileApp .mx-filters{grid-template-columns:repeat(8,minmax(0,1fr))}.mx-plan-group{margin-top:30px}}
+@media(min-width:801px){#mobileApp .mx-header{height:66px;padding-inline:32px}#mobileApp .mx-dock{padding-inline:max(24px,calc((100% - 680px)/2))}#mobileApp .mx-dock button{min-height:51px;flex-direction:row;gap:10px;font-size:14px!important}#mobileApp .mx-page-head{padding-top:30px}#mobileApp .mx-place-grid{grid-template-columns:repeat(4,minmax(0,1fr))}#mobileApp .mx-place-title{font-size:23px}#mobileApp .mx-guide-list{grid-template-columns:repeat(3,minmax(0,1fr))}#mobileApp .mx-guide-card{grid-template-columns:70px minmax(0,1fr) 16px;gap:10px}#mobileApp .mx-guide-card img{width:70px;height:80px}.mx-trip-hero{min-height:270px}.mx-trip-hero-copy h1{font-size:52px}#mobileApp .mx-guide-photo{height:320px}#mobileApp .mx-guide-top{padding-inline:max(24px,calc((100% - 750px)/2))}#mobileApp .mx-guide-action{max-width:750px;width:100%}}
+@media(max-width:359px){#mobileApp .mx-wrap{width:calc(100% - 28px)}#mobileApp .mx-dock{padding-inline:9px}#mobileApp .mx-page-head h1{font-size:30px}.mx-trip-hero-copy{padding:20px 16px}.mx-trip-hero-copy h1{font-size:36px}.mx-orientation button{padding:12px}.mx-orientation strong{font-size:13px}#mobileApp .mx-place-title{font-size:19px}#mobileApp .mx-guide-card{grid-template-columns:65px minmax(0,1fr) 15px;gap:10px}#mobileApp .mx-guide-card img{width:65px;height:78px}#mobileApp .mx-guide-card strong{font-size:14px}#mobileApp #propertySheet.mx-inline-place .mx-sheet-top{padding-inline:14px}#mobileApp #propertySheet.mx-inline-place .sheet-footer{padding-inline:14px}#mobileApp #propertySheet.mx-inline-place .mx-sheet-top>strong{font-size:16px}}
+
+@media(min-width:801px){#mobileApp #tripDialog.mx-inline-trip>.mt-inline-header{width:min(100%,1000px);align-self:center;box-sizing:border-box}}

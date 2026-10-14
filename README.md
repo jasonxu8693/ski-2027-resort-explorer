@@ -6,15 +6,15 @@ Live: https://jasonxu8693.github.io/ski-2027-resort-explorer/
 
 ## Phone companion · 14 October 2026
 
-Phones now open a purpose-built native-scroll companion: **Home, Places, Saved, Trip**. All 25 existing places can be searched and filtered, and all seven guide chapters open as reading pages. Favourites are personal localStorage data, clearly separate from the shared bookings. Desktop retains the gondola journey and gains a **Browse places** entry into the same directory.
+Phones open a companion organised around **Trip plan, Places and Guide**. The first visit introduces the trip and practical next steps; returning users can resume their tab, filters and reading position within the browser session. Places contains all 25 venues and an All / Saved collection switch. Guide contains seven topics. Favourites remain personal localStorage data. Desktop retains the gondola journey and an **Open trip planner** entry into the same companion.
 
-Trip details have a section selector, independently remembered reading positions, labelled mobile tables and per-person booking cards with an optional person filter. The nine original panels, source data and shared Supabase handlers are preserved. Full-height place details keep their title, map and main link reachable. Browser Back closes a photo first, then its place; direct links also work on fresh entry.
+Ordinary chapters, places and trip sections stay inside the persistent three-tab shell. Each has a named return route. Only full-screen photographs use an overlay, and photo-labelled actions open it directly. The nine original panels, source data and shared Supabase handlers are preserved; booking rows use readable person cards and the person filter remembers its local choice.
 
-`index.html` still contains all CSS and JavaScript and opens directly from disk alongside the existing images. No runtime build, package installation or server is required. The companion's editable source is kept in `mobile-explorer.css` / `.js` and `mobile-trip.css` / `.js`. After editing those, run `node build-ui.cjs` to embed them in `index.html`; `node verify-ui.cjs` checks syntax, embedding and unchanged original data/shared-store code against the last commit.
+`index.html` contains all CSS and JavaScript and opens directly from disk alongside the existing images. No runtime build, package installation or server is required. Editable companion sources are `mobile-explorer.css` / `.js`, `mobile-trip.css` / `.js` and `mobile-flow.css`. After editing, run `node build-ui.cjs` to embed them; `node verify-ui.cjs` checks syntax, embedding and unchanged original data/shared-store code against the last commit.
 
 Phone animations use brief transform/opacity transitions. The phone companion does not run the scenic snow, Lenis or scroll-driven gondola animation. Both the system reduced-motion preference and the Motion control are respected. Research dates and unconfirmed prices remain visible; older Costs/Food comparisons have explicit reference notices.
 
-See `docs/design-review.md` and `docs/trip-detail-mobile-audit.md` for the audit, design references, verification and remaining device-test limits.
+See `docs/phone-experience-strategy.md`, `docs/experience-methods.md`, `docs/navigation-audit-v2.md`, `docs/experience-walkthrough-scenarios.md` and `docs/phone-release-verification.md` for the current strategy, research, acceptance journeys and verification. The earlier `docs/design-review.md` and `docs/trip-detail-mobile-audit.md` describe the first pass, whose navigation was superseded after user feedback.
 
 ## Structure
 
@@ -28,7 +28,7 @@ The following describes the original scenic layers; the phone companion supersed
 
 ## Links that open a specific place
 
-- `#todo` `#bookings` `#week` `#costs` `#food` `#whos-in` `#gotchas` `#sources` open the trip modal on that tab (the phone back button closes it).
+- `#todo` `#bookings` `#week` `#packing` `#costs` `#food` `#whos-in` `#gotchas` `#sources` open an ordinary trip section in the companion on both phones and desktop. The scenic desktop's own Trip details button retains its original modal.
 - `#p/<place id>` opens the explorer at that place, e.g. `#p/vt-intersport`, `#p/2` (the apartment).
 - `#pictures` and `#explore` jump to those sections.
 

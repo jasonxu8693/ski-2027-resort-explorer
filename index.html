@@ -1731,7 +1731,7 @@ window.SkiExplorer={
  closePlace(){closeSheet(false);},
  openPhoto(){openLightbox();},
  closePhoto(){closeLightbox();},
- openTrip(id){if(window.SkiMobile&&window.SkiMobile.active){showTrip(id);const d=$('tripDialog');if(!d.open)d.showModal();}else openTrip(id);},
+ openTrip(id){if(window.SkiMobile&&window.SkiMobile.active){showTrip(id);const d=$('tripDialog');if(d.open&&d.matches(':modal'))d.close();if(!d.open)d.show();}else openTrip(id);},
  refreshTasks:qRender,taskState:qState,
  pauseScenic(){stopLenis();if(snowRaf)cancelAnimationFrame(snowRaf);snowRaf=0;if(rideTl)rideTl.progress(1);},
  resumeScenic(){lSzC=null;lLayout();startScrollTriggers();startLenis();snowKick();schedule();}
@@ -1927,6 +1927,13 @@ html.app .stops ol{touch-action:none}
 
 
 
+
+
+
+
+
+
+
 <!-- COMPANION UI START -->
 <style id="companion-ui">
 /* Phone-first companion. The original scenic journey remains the desktop landing. */
@@ -1979,7 +1986,7 @@ html:not(.motion-off) #mobileApp button:active{transform:scale(.98)}html:not(.mo
 @media(prefers-reduced-motion:reduce){#mobileApp *,#mobileApp *:before{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
 /* Trip tools: retain the original controls and shared-state handlers. */
-.mt-trip-jump,.mt-booking-state,.mt-person-summary,.mt-remove-label,.mt-booking-filter,.mt-booking-empty{display:none}
+.mt-trip-jump,.mt-booking-state,.mt-person-summary,.mt-remove-label,.mt-booking-filter,.mt-booking-empty,.mt-inline-header{display:none}
 .mt-reference-note{padding:13px 15px;margin:0 0 18px;border:1px solid #e5d6b9;border-left:3px solid #a67330;border-radius:10px;background:#fff9ee;color:#6f542d;font-size:13px;line-height:1.6}
 .mt-reference-note strong{display:block;margin:0 0 3px;font-size:12px;letter-spacing:.02em;color:#684a24}
 .mt-reference-note p{margin:0}
@@ -2063,6 +2070,7 @@ html.mobile-ui #tripDialog .mt-remove-label{display:inline;font-size:13px;pointe
 html.mobile-ui #tripDialog .mt-booking-filter{display:block;margin:18px 0 14px}
 html.mobile-ui #tripDialog .mt-booking-filter label{display:block;margin:0 0 7px;font-size:12px;font-weight:600;color:#557080}
 html.mobile-ui #tripDialog .mt-booking-filter select{width:100%;min-height:48px;border:1px solid #ccdce4;border-radius:11px;padding:10px 12px;background:white;color:#102a3b;font-size:16px}
+html.mobile-ui #tripDialog .mt-filter-scope{display:block;margin:7px 0 0;font-size:11px;line-height:1.5;color:#587182}
 html.mobile-ui #tripDialog .mt-booking-empty{display:block;padding:18px;border:1px dashed #bfd1da;border-radius:14px;background:white;font-size:14px;line-height:1.6;color:#557080}
 html.mobile-ui #tripDialog .mt-bookings>tbody>tr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:16px;background:#fff;border:1px solid #dce5e9;border-radius:16px;min-width:0}
 html.mobile-ui #tripDialog .mt-bookings>tbody>tr.mt-person-hidden{display:none}
@@ -2089,107 +2097,261 @@ html.mobile-ui #tripDialog .mt-bookings>tfoot td.nm{grid-column:1/-1;font-weight
 html.mobile-ui #tripDialog .mt-bookings>tfoot td.nm::before{display:none}
 @media(max-width:359px){html.mobile-ui #tripDialog .trip-header{padding-left:16px;padding-right:16px}html.mobile-ui #tripDialog .trip-data{padding-left:16px;padding-right:16px}html.mobile-ui #tripDialog .trip-data .card{padding:14px}html.mobile-ui #tripDialog .mt-bookings>tbody>tr{padding:13px;gap:9px}html.mobile-ui #tripDialog .mt-bookings .bkc{padding:9px 7px;gap:6px;font-size:11px}}
 
+/* Embedded trip section: the parent shell owns height and the permanent navigation. */
+html.mobile-ui #tripDialog.mx-inline-trip,
+body.directory-open #tripDialog.mx-inline-trip{position:relative;inset:auto;align-self:stretch;flex:1 1 auto;width:100%;max-width:none;height:100%;min-height:0;max-height:none;margin:0;padding:0;border:0;border-radius:0;overflow:hidden;background:#f3f6f7;box-shadow:none;transform:none!important;opacity:1!important;animation:none}
+html.mobile-ui #tripDialog.mx-inline-trip[open],
+body.directory-open #tripDialog.mx-inline-trip[open]{display:flex;flex-direction:column}
+html.mobile-ui #tripDialog.mx-inline-trip:not([open]),
+body.directory-open #tripDialog.mx-inline-trip:not([open]){display:none}
+html.mobile-ui #tripDialog.mx-inline-trip::backdrop,
+body.directory-open #tripDialog.mx-inline-trip::backdrop{display:none;background:transparent;backdrop-filter:none}
+html.mobile-ui #tripDialog.mx-inline-trip>.trip-header,
+body.directory-open #tripDialog.mx-inline-trip>.trip-header{display:none}
+html.mobile-ui #tripDialog.mx-inline-trip .mt-trip-jump,
+body.directory-open #tripDialog.mx-inline-trip .mt-trip-jump,
+html.mobile-ui #tripDialog.mx-inline-trip #closeTrip,
+body.directory-open #tripDialog.mx-inline-trip #closeTrip,
+html.mobile-ui #tripDialog.mx-inline-trip .trip-tabs,
+body.directory-open #tripDialog.mx-inline-trip .trip-tabs{display:none}
+html.mobile-ui #tripDialog.mx-inline-trip>.mt-inline-header,
+body.directory-open #tripDialog.mx-inline-trip>.mt-inline-header{display:block;position:relative;flex:none;z-index:2;padding:7px 20px 18px;background:#fff;border-bottom:1px solid #dce5e9}
+html.mobile-ui #tripDialog.mx-inline-trip .mt-inline-back,
+body.directory-open #tripDialog.mx-inline-trip .mt-inline-back{display:inline-flex;align-items:center;justify-content:flex-start;gap:4px;min-height:44px;min-width:44px;margin:0 0 4px -9px;padding:10px 9px;border:0;border-radius:8px;background:transparent;color:#365b6b;font:600 13px/1.4 Inter,system-ui,sans-serif;text-align:left;cursor:pointer}
+html.mobile-ui #tripDialog.mx-inline-trip .mt-inline-back svg,
+body.directory-open #tripDialog.mx-inline-trip .mt-inline-back svg{display:block;flex:0 0 18px;width:18px;height:18px}
+html.mobile-ui #tripDialog.mx-inline-trip .mt-inline-back:hover,
+body.directory-open #tripDialog.mx-inline-trip .mt-inline-back:hover{background:#edf3f5;color:#102a3b}
+html.mobile-ui #tripDialog.mx-inline-trip .mt-inline-title,
+body.directory-open #tripDialog.mx-inline-trip .mt-inline-title{margin:0 0 6px;padding:0;font:400 30px/1.15 Georgia,serif;letter-spacing:-.035em;color:#102a3b;overflow-wrap:anywhere}
+html.mobile-ui #tripDialog.mx-inline-trip .mt-inline-description,
+body.directory-open #tripDialog.mx-inline-trip .mt-inline-description{display:block;margin:0;max-width:65ch;font:400 12px/1.5 Inter,system-ui,sans-serif;color:#567080}
+html.mobile-ui #tripDialog.mx-inline-trip>.trip-data,
+body.directory-open #tripDialog.mx-inline-trip>.trip-data{position:relative;flex:1 1 auto;align-self:center;min-height:0;width:100%;max-width:1000px;overflow:auto;overscroll-behavior:contain;scroll-behavior:auto;touch-action:pan-y;-webkit-overflow-scrolling:touch;padding:20px 20px 28px;scroll-padding-top:16px}
+html.mobile-ui #tripDialog.mx-inline-trip .panel>.sec:first-child>h2:first-child,
+body.directory-open #tripDialog.mx-inline-trip .panel>.sec:first-child>h2:first-child{display:none}
+@media(max-width:359px){html.mobile-ui #tripDialog.mx-inline-trip>.mt-inline-header{padding-inline:16px}html.mobile-ui #tripDialog.mx-inline-trip>.trip-data{padding-inline:16px}}
+
+/* One persistent navigation shell for the whole trip, including ordinary detail pages. */
+#mobileApp {--mx-ink:#163c49;--mx-muted:#577078;--mx-surface:#f5f6f1;background:var(--mx-surface)}
+#mobileApp .mx-header{height:60px;padding-block:7px;background:var(--mx-surface)}
+#mobileApp.mx-reading>.mx-header{display:none}
+#mobileApp .mx-dock{position:relative;inset:auto;transform:none;width:auto;flex:none;z-index:90;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;min-height:72px;padding:7px 14px max(9px,env(safe-area-inset-bottom));background:#fff;border-top:1px solid #d6e0d9;box-shadow:none}
+#mobileApp .mx-dock button{min-height:55px;border-radius:12px;display:flex;flex-direction:column;gap:5px;padding:6px 4px;font:600 12px/1.2 Inter,system-ui,sans-serif!important;letter-spacing:0;color:#526c74!important}
+#mobileApp .mx-dock button svg{width:23px;height:23px}
+#mobileApp .mx-dock button[aria-current=page]{background:#eaf0dd;color:#173e47!important}
+#mobileApp .mx-dock button[aria-current=page]:before{display:none}
+#mobileApp .mx-dock button:active{transform:none}
+#mobileApp .mx-view{scrollbar-gutter:stable;scroll-padding-top:20px;padding-bottom:28px}
+#mobileApp .mx-wrap{width:min(calc(100% - 36px),960px)}
+#mobileApp .mx-page-head{padding:22px 0 17px}
+#mobileApp .mx-page-head h1{font-size:34px;line-height:1.1;margin:0 0 9px;letter-spacing:-.035em}
+#mobileApp .mx-page-head p{font-size:14px;line-height:1.55;max-width:48ch}
+#mobileApp .mx-kicker{font-size:10px}
+#mobileApp .mx-section-head{margin:26px 0 13px}
+#mobileApp .mx-section-head h2{font:600 18px/1.35 Inter,system-ui,sans-serif;letter-spacing:-.025em}
+.mx-trip-hero{position:relative;overflow:hidden;border-radius:20px;background:#173e50;color:#fff;min-height:180px;display:flex;align-items:flex-end}
+.mx-trip-hero>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 53%}
+.mx-trip-hero:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#102e4210,#102f43e8)}
+.mx-trip-hero-copy{position:relative;z-index:1;padding:23px 20px;width:100%}
+.mx-trip-hero-copy h1{font:400 40px/1.05 Georgia,serif;letter-spacing:-.045em;margin:0 0 8px}
+.mx-trip-hero-copy p{font-size:13px;line-height:1.5;color:#fff;margin:0}
+.mx-trip-hero-copy .mx-kicker{color:#f1f7f8;margin-bottom:8px}
+.mx-orientation{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0 0}
+.mx-orientation button{display:flex;flex-direction:column;align-items:flex-start;gap:7px;padding:15px;border:1px solid #d3dfd6;border-radius:14px;background:#fff;text-align:left;min-height:105px}
+.mx-orientation svg{width:21px;height:21px;color:#365f68}
+.mx-orientation strong{display:block;font-size:14px;line-height:1.35;font-weight:650}
+.mx-orientation small{display:block;margin-top:5px;font-size:12px;color:#5d7278;line-height:1.45}
+.mx-orientation button>svg:last-child{margin-top:auto;align-self:flex-end;width:17px;height:17px}
+#mobileApp .mx-trip-hero{width:min(calc(100% - 36px),960px);margin:8px auto 0}
+#mobileApp .mx-guide-photo button{display:flex;align-items:center;gap:8px}
+#mobileApp .mx-guide-photo button svg{width:17px;height:17px}
+.mx-plan-group{margin-top:25px}
+.mx-plan-group h2{font:600 18px/1.35 Inter,system-ui,sans-serif;letter-spacing:-.025em;margin:0 0 12px}
+.mx-plan-links{display:grid;gap:9px}
+#mobileApp .mx-trip-grid{margin:0;gap:9px}
+#mobileApp .mx-trip-link{min-height:69px;border-radius:13px;padding:12px 14px;gap:12px;grid-template-columns:30px minmax(0,1fr) 18px}
+#mobileApp .mx-trip-link strong{font-size:15px}
+#mobileApp .mx-trip-link small{font-size:12px;line-height:1.4;margin-top:4px}
+#mobileApp .mx-next{background:#e9eee2;border:1px solid #d4dfc9;border-radius:13px;box-shadow:none;color:#173f44;padding:14px;margin:13px 0 0;gap:12px}
+#mobileApp .mx-next-count{font-size:23px;border-color:#a3b7aa;min-width:48px;padding-right:12px}
+#mobileApp .mx-next-count small{font-size:10px;color:#46645e}
+#mobileApp .mx-next-copy small{font-size:10px;color:#4d6863;letter-spacing:.07em}
+#mobileApp .mx-next-copy strong{font-size:12px}
+#mobileApp .mx-next-copy p{font-size:11px;color:#526b66}
+.mx-collection{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:4px;background:#e6ebe5;border:1px solid #dce3da;border-radius:13px;gap:4px;margin:15px 0}
+.mx-collection button{border:0;min-height:44px;border-radius:9px;background:transparent;color:#49666e;font-size:13px!important;font-weight:600!important;display:flex;align-items:center;justify-content:center;gap:7px;padding:9px}
+.mx-collection button[aria-pressed=true]{background:#fff;color:#173e47;box-shadow:0 1px 4px #173d4b13}
+.mx-collection svg{height:18px;width:18px}
+.mx-collection-count{font-size:11px;min-width:20px;padding:3px 5px;border-radius:6px;background:#e9eee5;font-variant-numeric:tabular-nums}
+#mobileApp .mx-filters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;padding:0;overflow:visible;scroll-snap-type:none}
+#mobileApp .mx-filter{white-space:normal;min-height:44px;padding:8px 4px;border-radius:9px;font-size:11px!important;line-height:1.3}
+#mobileApp .mx-filter-count{display:none}
+#mobileApp .mx-results-meta{font-size:12px;margin:13px 0 15px}
+#mobileApp .mx-region{font-size:14px!important;max-width:180px}
+#mobileApp .mx-place-grid{gap:12px}
+#mobileApp .mx-place{border-radius:16px}
+#mobileApp .mx-place-title{font-size:21px;line-height:1.18}
+#mobileApp .mx-place-type{font-size:9px;letter-spacing:.08em}
+#mobileApp .mx-place-note{font-size:11px;font-weight:500}
+#mobileApp .mx-place-area{font-size:12px}
+#mobileApp .mx-saved-info{margin:0 0 16px;font-size:12px}
+#mobileApp .mx-guide-card{grid-template-columns:78px minmax(0,1fr) 18px;border-radius:15px;min-height:100px;gap:13px}
+#mobileApp .mx-guide-card img{width:78px;height:82px;border-radius:10px}
+#mobileApp .mx-guide-card strong{font:600 15px/1.35 Inter,system-ui,sans-serif;letter-spacing:-.015em}
+#mobileApp .mx-guide-card p{font-size:12px;line-height:1.45;margin-top:5px}
+#mobileApp .mx-guide-card small{font-size:10px}
+#mobileApp .mx-guide-top{padding:7px 18px;gap:10px;background:var(--mx-surface)}
+#mobileApp .mx-guide-step{font-size:11px;line-height:1.4;text-align:right;max-width:50%}
+#mobileApp .mx-back{font-size:13px!important;font-weight:600!important;min-height:44px;text-align:left}
+#mobileApp .mx-guide-content{padding-top:22px}
+#mobileApp .mx-guide-content h1{font-size:32px}
+#mobileApp .mx-guide-content .st-dek{font:15px/1.65 Inter,system-ui,sans-serif}
+#mobileApp .mx-guide-photo{height:220px}
+#mobileApp .mx-guide-next{display:none}
+#mobileApp .mx-guide-action{padding:10px 18px;background:var(--mx-surface)}
+#mobileApp #mxDetail,#mobileApp #mxPanel{display:flex;flex-direction:column;min-height:0;overflow:hidden;padding:0;position:relative}
+html.mobile-ui #propertySheet.mx-inline-place,body.directory-open #propertySheet.mx-inline-place{position:relative;inset:auto;display:flex;flex-direction:column;align-self:center;flex:1;min-height:0;width:100%;height:100%;max-height:none;max-width:1000px;border:0;border-radius:0;box-shadow:none;background:var(--mx-surface);animation:none;transform:none!important;opacity:1!important;z-index:auto}
+html.mobile-ui #propertySheet.mx-inline-place[hidden],body.directory-open #propertySheet.mx-inline-place[hidden]{display:none!important}
+#mobileApp #propertySheet.mx-inline-place .sheet-scroll{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;scroll-padding-top:16px}
+#mobileApp #propertySheet.mx-inline-place .mx-sheet-top{display:grid;grid-template-columns:minmax(0,1fr) 44px 44px;gap:4px 8px;flex:none;padding:7px 18px 12px;background:var(--mx-surface);border-bottom:1px solid #d8e0d9}
+#mobileApp #propertySheet.mx-inline-place .mx-sheet-top>.mx-back{grid-column:1/-1;max-width:100%;width:fit-content;gap:5px;line-height:1.35;padding:8px 0;border:0;border-radius:0;background:none}
+#mobileApp #propertySheet.mx-inline-place .mx-sheet-top>.mx-back svg{width:18px;height:18px;flex:none}
+#mobileApp #propertySheet.mx-inline-place .mx-sheet-top>strong{min-width:0;max-height:none;font:600 17px/1.3 Inter,system-ui,sans-serif;letter-spacing:-.02em;overflow-wrap:anywhere}
+#mobileApp #propertySheet.mx-inline-place .mx-icon{width:44px;height:44px;border-radius:11px}
+#mobileApp #propertySheet.mx-inline-place .sheet-footer{padding:10px 18px 12px;border-top:1px solid #d8e0d9;background:var(--mx-surface);max-height:none;overflow:visible;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+#mobileApp #propertySheet.mx-inline-place .sheet-footer .st-btn{min-height:46px;white-space:normal;font-size:12px;display:flex;align-items:center;justify-content:center;text-align:center}
+#mobileApp #propertySheet.mx-inline-place .close-sheet,#mobileApp #propertySheet.mx-inline-place .sheet-grip{display:none}
+#mobileApp #propertySheet.mx-inline-place .sheet-content{padding:22px 20px}
+#mobileApp #propertySheet.mx-inline-place .detail-text{font-size:15px;line-height:1.65}
+#mobileApp #propertySheet.mx-inline-place .gallery{width:100%;aspect-ratio:4/3;max-height:360px}
+#mobileApp #propertySheet.mx-inline-place .sheet-footer #sheetLinks{display:none}
+#mobileApp #propertySheet.mx-inline-place .mx-sheet-extra-links:not(:empty){display:flex}
+#mobileApp #tripDialog.mx-inline-trip{background:var(--mx-surface)}
+#mobileApp #tripDialog.mx-inline-trip>.mt-inline-header{padding-top:max(7px,env(safe-area-inset-top));padding-bottom:14px;background:var(--mx-surface)}
+#mobileApp #tripDialog.mx-inline-trip .mt-inline-title{font-size:28px}
+#mobileApp #tripDialog.mx-inline-trip>.trip-data{background:var(--mx-surface)}
+#mobileApp .mx-tools{margin-top:20px}
+.mx-toast{bottom:calc(84px + env(safe-area-inset-bottom));z-index:140}
+@media(min-width:601px){#mobileApp .mx-plan-links{grid-template-columns:repeat(3,minmax(0,1fr))}.mx-trip-hero{min-height:230px}.mx-orientation{max-width:none}#mobileApp .mx-guide-list{grid-template-columns:repeat(2,minmax(0,1fr))}#mobileApp .mx-filters{grid-template-columns:repeat(8,minmax(0,1fr))}.mx-plan-group{margin-top:30px}}
+@media(min-width:801px){#mobileApp .mx-header{height:66px;padding-inline:32px}#mobileApp .mx-dock{padding-inline:max(24px,calc((100% - 680px)/2))}#mobileApp .mx-dock button{min-height:51px;flex-direction:row;gap:10px;font-size:14px!important}#mobileApp .mx-page-head{padding-top:30px}#mobileApp .mx-place-grid{grid-template-columns:repeat(4,minmax(0,1fr))}#mobileApp .mx-place-title{font-size:23px}#mobileApp .mx-guide-list{grid-template-columns:repeat(3,minmax(0,1fr))}#mobileApp .mx-guide-card{grid-template-columns:70px minmax(0,1fr) 16px;gap:10px}#mobileApp .mx-guide-card img{width:70px;height:80px}.mx-trip-hero{min-height:270px}.mx-trip-hero-copy h1{font-size:52px}#mobileApp .mx-guide-photo{height:320px}#mobileApp .mx-guide-top{padding-inline:max(24px,calc((100% - 750px)/2))}#mobileApp .mx-guide-action{max-width:750px;width:100%}}
+@media(max-width:359px){#mobileApp .mx-wrap{width:calc(100% - 28px)}#mobileApp .mx-dock{padding-inline:9px}#mobileApp .mx-page-head h1{font-size:30px}.mx-trip-hero-copy{padding:20px 16px}.mx-trip-hero-copy h1{font-size:36px}.mx-orientation button{padding:12px}.mx-orientation strong{font-size:13px}#mobileApp .mx-place-title{font-size:19px}#mobileApp .mx-guide-card{grid-template-columns:65px minmax(0,1fr) 15px;gap:10px}#mobileApp .mx-guide-card img{width:65px;height:78px}#mobileApp .mx-guide-card strong{font-size:14px}#mobileApp #propertySheet.mx-inline-place .mx-sheet-top{padding-inline:14px}#mobileApp #propertySheet.mx-inline-place .sheet-footer{padding-inline:14px}#mobileApp #propertySheet.mx-inline-place .mx-sheet-top>strong{font-size:16px}}
+
+@media(min-width:801px){#mobileApp #tripDialog.mx-inline-trip>.mt-inline-header{width:min(100%,1000px);align-self:center;box-sizing:border-box}}
+
 </style>
 <script id="companion-script">
-/* A native-scroll companion built from the existing trip content and place data. */
+/* A persistent three-tab shell around the original trip data and shared controls. */
 (function(){
   'use strict';
   const api=window.SkiExplorer,root=document.documentElement;if(!api)return;
   const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const icons={mountain:'<path d="m2 20 7-14 5 9 3-5 5 10H2Z"/><path d="m6 12 3 2 3-2"/>',home:'<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z"/><path d="M9 21v-8h6v8"/>',search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>',save:'<path d="M6 3h12v18l-6-4-6 4Z"/>',trip:'<rect x="4" y="6" width="16" height="15" rx="3"/><path d="M9 6V3h6v3M4 12h16M9 10v4m6-4v4"/>',arrow:'<path d="m9 5 7 7-7 7"/>',back:'<path d="m14 5-7 7 7 7"/>',close:'<path d="m6 6 12 12M6 18 18 6"/>',check:'<path d="m5 12 4 4L19 6"/><rect x="3" y="3" width="18" height="18" rx="4"/>',calendar:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 5h4"/>',money:'<path d="M16 6c-4-5-10-2-8 4l1 3c1 3-1 5-3 6h12M5 12h10"/>',food:'<path d="M4 3v7c0 3 6 3 6 0V3M7 3v18M19 3c-4 3-5 10 0 10V3Zm0 10v8"/>',people:'<circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3M17 5a3 3 0 0 1 0 6m1 4c3 1 3 3 3 6"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/>',map:'<path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Zm6-3v15m6-12v15"/>',share:'<path d="M12 16V3m-5 5 5-5 5 5M5 12v8h14v-8"/>',phone:'<path d="m4 3 4 1 1 5-3 2c2 4 3 5 7 7l2-3 5 1 1 4c-8 4-21-9-17-17Z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 1v3m0 16v3M1 12h3m16 0h3M4 4l2 2m12 12 2 2M4 20l2-2M18 6l2-2"/>'};
-  const icon=n=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(icons[n]||icons.mountain)+'</svg>';
-  const cats={all:'All places',stays:'Our stay',school:'Lessons',rentals:'Ski hire',lifts:'Mountain',apres:'Après',food:'Food',groceries:'Groceries'};
-  const types={stays:'Our stay',school:'Ski school',rentals:'Ski hire',lifts:'On the mountain',apres:'Après-ski',food:'Restaurant',groceries:'Groceries'};
+  const paths={mountain:'<path d="m2 20 7-14 5 9 3-5 5 10H2Z"/>',home:'<path d="m3 10 9-7 9 7v11H3V10Zm6 11v-8h6v8"/>',search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/>',save:'<path d="M6 3h12v18l-6-4-6 4Z"/>',trip:'<rect x="4" y="6" width="16" height="15" rx="3"/><path d="M9 6V3h6v3M4 12h16"/>',guide:'<path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1 3-2 6-2 9-1V4c-3-1-6-1-9 1Zm0 0v15"/>',arrow:'<path d="m9 5 7 7-7 7"/>',back:'<path d="m14 5-7 7 7 7"/>',close:'<path d="m6 6 12 12M6 18 18 6"/>',check:'<path d="m5 12 4 4L19 6"/><rect x="3" y="3" width="18" height="18" rx="4"/>',calendar:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18"/>',money:'<path d="M16 6c-4-5-10-2-8 4l1 3c1 3-1 5-3 6h12M5 12h10"/>',food:'<path d="M4 3v7c0 3 6 3 6 0V3M7 3v18M19 3c-4 3-5 10 0 10V3Zm0 10v8"/>',people:'<circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3M17 5a3 3 0 0 1 0 6m1 4c3 1 3 3 3 6"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/>',map:'<path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Zm6-3v15m6-12v15"/>',share:'<path d="M12 16V3m-5 5 5-5 5 5M5 12v8h14v-8"/>',phone:'<path d="m4 3 4 1 1 5-3 2c2 4 3 5 7 7l2-3 5 1 1 4c-8 4-21-9-17-17Z"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 1v3m0 16v3M1 12h3m16 0h3M4 4l2 2m12 12 2 2M4 20l2-2M18 6l2-2"/>'};
+  const icon=n=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(paths[n]||paths.mountain)+'</svg>';
+  const cats={all:'All types',stays:'Stay',school:'Lessons',rentals:'Ski hire',lifts:'Mountain',apres:'Après',food:'Food',groceries:'Groceries'},types={stays:'Our apartment',school:'Ski school',rentals:'Ski hire',lifts:'On the mountain',apres:'Après-ski',food:'Restaurant',groceries:'Groceries'};
   const panels=[['p4','todo','To do','Group jobs & your checklist','check'],['p3','bookings','Bookings','Who has what booked','trip'],['p2','week','The week','Arrival, ski days & going home','calendar'],['p10','packing','Packing','Your list, saved on this device','trip'],['p5','costs','Costs','Budget, tariffs & reference prices','money'],['p8','food','Food plan','Eating in & heading out','food'],['p9','whos-in','Who’s in','The group & attendance','people'],['p6','gotchas','Good to know','Deposits, deadlines & caveats','info'],['p7','sources','Sources','Research, dates & open questions','info']];
-  const placeData=api.places.map(p=>({...p,category:typeof p.id==='number'?'stays':p.category}));
-  const getPlace=id=>placeData.find(p=>String(p.id)===String(id));
-  const chapters=Array.from(document.querySelectorAll('.stop')).map((s,i)=>({i,title:s.querySelector('h3').textContent,nav:s.querySelector('.st-pill').textContent.replace('✳','').trim(),photo:s.querySelector('.st-main img').dataset.src,summary:s.querySelector('.st-dek').textContent,fact:s.querySelector('.st-facts li')?.textContent||'',copy:s.querySelector('.st-copy'),credit:s.querySelector('.st-credit')?.textContent||'',place:s.dataset.gid,cta:s.querySelector('.st-cta > button,.st-cta > a')}));
-  const KEY='ski2027.explorer.saved.v1';let saved=new Set(),persistent=true;try{const a=JSON.parse(localStorage.getItem(KEY)||'[]');if(Array.isArray(a))saved=new Set(a.filter(id=>getPlace(id)).map(String));}catch(e){persistent=false;}
-  let screen='home',filter='all',region='all',query='',guideIndex=0,detailId=null,detailReturn='home',toastTimer,undoId=null,undoAdded=false,lastFocus=null;
-  const app=document.createElement('div');app.id='mobileApp';app.innerHTML=`
-  <header class="mx-header"><button type="button" class="mx-brand" data-mx-nav="home" aria-label="Ski 27 home">${icon('mountain')}<span>SKI / 27<small>LES TROIS VALLÉES</small></span></button><div class="mx-header-actions"><span class="mx-date">9—16 January<br>Val Thorens · 2027</span><button type="button" class="mx-icon" id="mxScene" aria-label="Return to the scenic desktop view" hidden>${icon('close')}</button></div></header>
-  <main class="mx-view" id="mxHome" tabindex="-1" aria-label="Trip home"><section class="mx-hero"><img src="images/landscape-1800.webp" alt="Snow-covered Val Thorens beneath the mountain lifts" fetchpriority="high"><span class="mx-hero-stamp">A week at 2,300 m</span><div class="mx-hero-copy"><p class="mx-kicker">One week. A whole mountain.</p><h1>Les 3<br><em>Vallées.</em></h1><p>From the first lift to the last fondue.<br>Your week, all in one place.</p></div></section><div class="mx-wrap"><button class="mx-next" type="button" id="mxNext" data-mx-panel="todo"></button><div class="mx-quick"><button type="button" data-mx-guide="0">${icon('home')}Our stay</button><button type="button" data-mx-panel="bookings">${icon('check')}Bookings</button><button type="button" data-mx-panel="packing">${icon('trip')}Packing</button></div><div class="mx-section-head"><h2>The mountain guide</h2><span>7 chapters</span></div><div class="mx-guide-list" id="mxGuides"></div><div class="mx-section-head"><h2>Find your kind of day</h2><button class="mx-text-button" type="button" data-mx-nav="places">All places ↗</button></div><div class="mx-place-grid" id="mxFeatured"></div><p class="mx-credit">Val Thorens photograph by Florian Pépellin, <a href="https://commons.wikimedia.org/wiki/File:Val_Thorens_village_et_Funitel_en_hiver_(f%C3%A9vrier_2024).JPG" target="_blank" rel="noopener">CC BY-SA 4.0</a>. Place photographs and source dates are credited in each detail view.</p></div></main>
-  <main class="mx-view" id="mxPlaces" tabindex="-1" aria-label="Browse places" hidden><div class="mx-wrap"><div class="mx-page-head"><p class="mx-kicker">Around the resort & beyond</p><h1>Find your next stop.</h1><p>Lessons, long lunches and a little après. All the places from the trip, ready to explore.</p></div><label class="mx-search">${icon('search')}<input id="mxSearch" type="search" aria-label="Search places" placeholder="Try fondue, ski hire, Méribel…" autocomplete="off"><button id="mxClearSearch" type="button" aria-label="Clear search" hidden>${icon('close')}</button></label><div class="mx-filters" id="mxFilters" aria-label="Place categories"></div><div class="mx-results-meta"><span id="mxResultCount" role="status" aria-live="polite"></span><label><span class="sr-only">Area</span><select id="mxRegion" class="mx-region"><option value="all">All areas</option><option value="vt">Val Thorens</option><option value="meribel">Beyond Val Thorens</option></select></label></div><div class="mx-place-grid" id="mxResults"></div><p class="mx-credit">Planning notes from the existing trip research. Open a place for its source date, photo credits and details to confirm.</p></div></main>
-  <main class="mx-view" id="mxSaved" tabindex="-1" aria-label="Saved places" hidden><div class="mx-wrap"><div class="mx-page-head"><p class="mx-kicker">A little list of good ideas</p><h1>For your week.</h1><p id="mxSavedCount"></p></div><p class="mx-saved-info" id="mxSaveBasis">Saved on this device. These are your favourites, not group bookings.</p><div class="mx-place-grid" id="mxSavedList"></div></div></main>
-  <main class="mx-view" id="mxTrip" tabindex="-1" aria-label="Trip organiser" hidden><div class="mx-wrap"><div class="mx-page-head"><p class="mx-kicker">9—16 January 2027</p><h1>The practical bits.</h1><p>Plans, people and everything to get sorted before the first lift.</p></div><div class="mx-tools"><a href="https://www.google.com/maps/dir/?api=1&destination=R%C3%A9sidence%20des%20Balcons%2C%20Val%20Thorens%2C%20France" target="_blank" rel="noopener">${icon('map')}Our stay</a><a href="https://tricount.com/tROsFZkHBPiGNGoDKT" target="_blank" rel="noopener">${icon('money')}Tricount</a><a href="tel:+33479009073">${icon('phone')}Ski hire</a></div><div class="mx-trip-grid">${panels.map(p=>`<button type="button" class="mx-trip-link" data-mx-panel="${p[1]}">${icon(p[4])}<span><strong>${p[2]}</strong><small>${p[3]}</small></span>${icon('arrow')}</button>`).join('')}</div><div class="mx-tools"><button type="button" id="mxMotion" aria-pressed="false">${icon('sun')}<span>Motion on</span></button><button type="button" id="mxShare">${icon('share')}Share this trip</button><a href="tel:112" class="mx-emergency">Emergency · 112</a></div><p class="mx-credit">Group tasks and bookings use the existing shared board. Packing and saved places stay on your device.</p></div></main>
-  <main class="mx-view" id="mxGuide" tabindex="-1" aria-label="Mountain guide" hidden></main>
-  <nav class="mx-dock" aria-label="Main navigation">${[['home','home','Home'],['places','search','Places'],['saved','save','Saved'],['trip','trip','Trip']].map(n=>`<button type="button" data-mx-nav="${n[0]}" ${n[0]==='home'?'aria-current="page"':''}>${icon(n[1])}<span>${n[2]}</span>${n[0]==='saved'?'<span class="mx-badge" id="mxSavedBadge" hidden>0</span>':''}</button>`).join('')}</nav>`;
-  document.body.appendChild(app);
+  const topicNames=['Our apartment','Travel & arrival','Lessons & passes','Après & food','On the mountain','Beyond Val Thorens','Gear & packing'];
+  const places=api.places.map(p=>({...p,category:typeof p.id==='number'?'stays':p.category})),getPlace=id=>places.find(p=>String(p.id)===String(id));
+  const chapters=Array.from(document.querySelectorAll('.stop')).map((s,i)=>({i,title:s.querySelector('h3').textContent,nav:topicNames[i],photo:s.querySelector('.st-main img').dataset.src,fact:s.querySelector('.st-facts li')?.textContent||'',copy:s.querySelector('.st-copy'),credit:s.querySelector('.st-credit')?.textContent||'',place:s.dataset.gid,cta:s.querySelector('.st-cta > button,.st-cta > a')}));
+  const KEY='ski2027.explorer.saved.v1';let saved=new Set(),persistent=true;
+  try{const a=JSON.parse(localStorage.getItem(KEY)||'[]');if(Array.isArray(a))saved=new Set(a.filter(getPlace).map(String));}catch(e){persistent=false;}
+  let filter='all',region='all',query='',collection='all',current=null,detailId=null,guideIndex=-1,embedded=false,toastTimer,undoId=null,undoAdded=false,routeVersion=0,restorePending=false,sessionView=null;
+  const SESSION_KEY='ski2027.explorer.session.v2';
+  const positions=new Map(),focusMemory=new Map(),guideExpanded=new Map(),detailExpanded=new Map(),tabLast={trip:null,places:null,guide:null};
+  const sheet=$('propertySheet'),dialog=$('tripDialog'),lightbox=$('lightbox'),sheetMarker=document.createComment('place-sheet-original-position'),dialogMarker=document.createComment('trip-dialog-original-position');sheet.before(sheetMarker);dialog.before(dialogMarker);
+  const panelButton=p=>`<button type="button" class="mx-trip-link" data-mx-panel="${p[1]}">${icon(p[4])}<span><strong>${p[2]}</strong><small>${p[3]}</small></span>${icon('arrow')}</button>`;
+  const groups=[['Get ready',['bookings','todo','packing']],['Our week',['week','food','whos-in']],['Reference',['costs','gotchas','sources']]];
+  const app=document.createElement('div');app.id='mobileApp';
+  app.innerHTML=`<header class="mx-header"><button type="button" class="mx-brand" data-mx-nav="trip" aria-label="Trip plan">${icon('mountain')}<span>SKI / 27<small>VAL THORENS</small></span></button><div class="mx-header-actions"><span class="mx-date">9—16 January · 2027</span><button type="button" class="mx-icon" id="mxScene" aria-label="Return to the scenic desktop view" hidden>${icon('close')}</button></div></header>
+  <main class="mx-view" id="mxTrip" tabindex="-1" aria-label="Trip plan"><section class="mx-trip-hero"><img src="images/landscape-1800.webp" alt="Snow-covered Val Thorens beneath the mountain lifts" fetchpriority="high"><div class="mx-trip-hero-copy"><p class="mx-kicker">Trip plan · 9—16 January 2027</p><h1>Val Thorens.</h1><p>Our week in Les 3 Vallées.<br>Booked base: Résidence des Balcons.</p></div></section><div class="mx-wrap"><div class="mx-orientation"><button type="button" class="mx-overview-link" data-mx-guide="0">${icon('home')}<span><strong>Our apartment</strong><small>Rooms, arrival details & photos</small></span>${icon('arrow')}</button><button type="button" class="mx-overview-link" data-mx-guide="1">${icon('map')}<span><strong>Travel & arrival</strong><small>Flights, transfers & check-in</small></span>${icon('arrow')}</button></div>${groups.map(g=>`<section class="mx-plan-group"><h2>${g[0]}</h2><div class="mx-plan-links">${g[1].map(slug=>panelButton(panels.find(p=>p[1]===slug))).join('')}</div></section>`).join('')}<button class="mx-next mx-next-compact" type="button" id="mxNext" data-mx-panel="todo"></button><div class="mx-tools"><a href="https://www.google.com/maps/dir/?api=1&destination=R%C3%A9sidence%20des%20Balcons%2C%20Val%20Thorens%2C%20France" target="_blank" rel="noopener">${icon('map')}Directions to apartment</a><a href="https://tricount.com/tROsFZkHBPiGNGoDKT" target="_blank" rel="noopener">${icon('money')}Tricount</a><a href="tel:+33479009073">${icon('phone')}Call ski hire</a></div><div class="mx-tools"><button type="button" id="mxMotion" aria-pressed="false">${icon('sun')}<span>Motion on</span></button><button type="button" id="mxShare">${icon('share')}Share trip</button><a href="tel:112" class="mx-emergency">Emergency · 112</a></div><p class="mx-credit">Group jobs and bookings are shared. Packing and favourite places stay on this device.</p><p class="mx-credit">Val Thorens photograph by Florian Pépellin, <a href="https://commons.wikimedia.org/wiki/File:Val_Thorens_village_et_Funitel_en_hiver_(f%C3%A9vrier_2024).JPG" target="_blank" rel="noopener">CC BY-SA 4.0</a>.</p></div></main>
+  <main class="mx-view" id="mxPlaces" tabindex="-1" aria-label="Places" hidden><div class="mx-wrap"><div class="mx-page-head"><p class="mx-kicker">Around Val Thorens & beyond</p><h1>Places</h1><p>Find a school, lunch spot or mountain day.</p></div><label class="mx-search">${icon('search')}<input id="mxSearch" type="search" aria-label="Search places" placeholder="Search places, food, activities…" autocomplete="off"><button id="mxClearSearch" type="button" aria-label="Clear search" hidden>${icon('close')}</button></label><div class="mx-collection" id="mxCollections" role="group" aria-label="Place collection"><button type="button" data-mx-collection="all" aria-pressed="true">All places</button><button type="button" data-mx-collection="saved" aria-pressed="false">${icon('save')}Saved <span class="mx-collection-count" id="mxSavedCount">0</span></button></div><p class="mx-saved-info" id="mxSaveBasis" hidden></p><div class="mx-filters" id="mxFilters" role="group" aria-label="Place categories"></div><div class="mx-results-meta"><span id="mxResultCount" role="status" aria-live="polite"></span><label><span class="sr-only">Area</span><select id="mxRegion" class="mx-region"><option value="all">All areas</option><option value="vt">Val Thorens</option><option value="meribel">Beyond Val Thorens</option></select></label></div><div class="mx-place-grid" id="mxResults"></div><p class="mx-credit">Open a place for practical details, source dates and photo credits.</p></div></main>
+  <main class="mx-view" id="mxGuideIndex" tabindex="-1" aria-label="Guide" hidden><div class="mx-wrap"><div class="mx-page-head"><p class="mx-kicker">Know before you go</p><h1>Guide</h1><p>Seven useful topics. Start with what you need.</p></div><div class="mx-guide-list" id="mxGuides"></div></div></main>
+  <main class="mx-view" id="mxGuide" tabindex="-1" aria-label="Guide topic" hidden></main><main class="mx-view mx-detail-view" id="mxDetail" tabindex="-1" aria-label="Place details" hidden></main><main class="mx-view mx-panel-view" id="mxPanel" tabindex="-1" aria-label="Trip section" hidden></main>
+  <nav class="mx-dock" aria-label="Main navigation">${[['trip','calendar','Trip plan'],['places','map','Places'],['guide','guide','Guide']].map(n=>`<button type="button" data-mx-nav="${n[0]}"${n[0]==='trip'?' aria-current="page"':''}>${icon(n[1])}<span>${n[2]}</span></button>`).join('')}</nav>`;document.body.appendChild(app);
   const toast=document.createElement('div');toast.className='mx-toast';toast.id='mxToast';toast.hidden=true;toast.innerHTML='<span role="status" aria-live="polite"></span><button type="button" id="mxUndo" hidden>Undo</button>';document.body.appendChild(toast);
-  const sheet=$('propertySheet'),sheetTop=document.createElement('div');sheetTop.className='mx-sheet-top';sheetTop.innerHTML=`<button type="button" class="mx-icon" id="mxDetailBack" aria-label="Close place details">${icon('back')}</button><strong id="mxDetailTitle"></strong><button type="button" class="mx-icon mx-sheet-save" id="mxDetailSave" aria-label="Save place" aria-pressed="false">${icon('save')}</button><button type="button" class="mx-icon" id="mxDetailShare" aria-label="Share place">${icon('share')}</button>`;sheet.prepend(sheetTop);
+  const sheetTop=document.createElement('header');sheetTop.className='mx-sheet-top';sheetTop.innerHTML=`<button type="button" class="mx-back" id="mxDetailBack">${icon('back')}<span id="mxDetailParent">Places</span></button><strong id="mxDetailTitle"></strong><button type="button" class="mx-icon mx-sheet-save" id="mxDetailSave" aria-label="Save place" aria-pressed="false">${icon('save')}</button><button type="button" class="mx-icon" id="mxDetailShare" aria-label="Share place">${icon('share')}</button>`;sheet.prepend(sheetTop);
   const extraLinks=document.createElement('div');extraLinks.className='mx-sheet-extra-links';sheet.querySelector('.sheet-content').appendChild(extraLinks);
-  const desktopButton=document.createElement('button');desktopButton.type='button';desktopButton.className='glass-btn mx-desktop-open';desktopButton.textContent='Browse places';desktopButton.addEventListener('click',()=>{document.body.classList.add('directory-open');setScenicInert(true);api.pauseScenic();navigate('places');});document.querySelector('.top-actions').prepend(desktopButton);
+  const desktopButton=document.createElement('button');desktopButton.type='button';desktopButton.className='glass-btn mx-desktop-open';desktopButton.textContent='Open trip planner';desktopButton.addEventListener('click',()=>{document.body.classList.add('directory-open');layout();go('trip');});document.querySelector('.top-actions').prepend(desktopButton);
   function active(){return root.classList.contains('mobile-ui')||document.body.classList.contains('directory-open');}
-  function setScenicInert(on){document.querySelectorAll('body>.topbar,body>#intro,body>#story,body>.scroll-hint,body>.hero-credit,body>.skip').forEach(x=>{x.inert=on;});const oldExplorer=$('explorer');if(oldExplorer)oldExplorer.inert=on||!oldExplorer.classList.contains('ready');}
-  function currentHash(){return location.hash.slice(1);}
-  function writeHash(hash,replace=false){const depth=Number(history.state?.mxDepth)||0,state={mx:1,mxDepth:replace?depth:depth+1};history[replace?'replaceState':'pushState'](state,'',location.pathname+location.search+(hash?'#'+hash:''));}
-  function navigate(hash,replace=false){if(hash===currentHash()&&active()){route();return;}writeHash(hash,replace);route();}
-  function view(name,focus=true){screen=name;['home','places','saved','trip','guide'].forEach(n=>{$('mx'+n[0].toUpperCase()+n.slice(1)).hidden=n!==name;});app.querySelectorAll('.mx-dock [data-mx-nav]').forEach(b=>{if(b.dataset.mxNav===(name==='guide'?'home':name))b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});const el=$('mx'+name[0].toUpperCase()+name.slice(1));el.classList.remove('mx-enter');if(!root.classList.contains('motion-off')){void el.offsetWidth;el.classList.add('mx-enter');}if(focus)el.focus({preventScroll:true});if(name==='saved')renderSaved();if(name==='home')updateNext();}
-  function normalize(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();}
-  function placeCard(p){const on=saved.has(String(p.id)),photos=p.photos||[],name=p.short||'Place details',area=p.category==='stays'?p.area:(p.region==='vt'?'Val Thorens':'Beyond Val Thorens');return `<article class="mx-place"><button type="button" class="mx-place-open" data-mx-place="${esc(p.id)}" aria-label="View ${esc(name)}"><span class="mx-photo${photos.length?'':' is-missing'}">${photos.length?`<img src="${esc(photos[0])}" alt="" loading="lazy" decoding="async">`:''}<span class="mx-photo-fallback">${icon('mountain')}Photo to come</span></span><span class="mx-place-info"><span class="mx-place-type">${esc(types[p.category]||'Place')}</span><strong class="mx-place-title">${esc(name)}</strong><span class="mx-place-area">${esc(area||'Details to confirm')}</span>${p.badge?`<span class="mx-place-note">${esc(p.badge)}</span>`:''}</span></button><button type="button" class="mx-save" data-mx-save="${esc(p.id)}" aria-pressed="${on}" aria-label="${on?'Unsave':'Save'} ${esc(name)}">${icon('save')}</button></article>`;}
-  function buildFilters(){const el=$('mxFilters');el.innerHTML=Object.entries(cats).map(([k,label])=>`<button type="button" class="mx-filter" data-mx-filter="${k}" aria-pressed="${k===filter}">${label}<span class="mx-filter-count">${k==='all'?placeData.length:placeData.filter(p=>p.category===k).length}</span></button>`).join('');}
-  function renderPlaces(){const terms=normalize(query).trim().split(/\s+/).filter(Boolean);const found=placeData.filter(p=>(filter==='all'||p.category===filter)&&(region==='all'||p.region===region)&&terms.every(t=>normalize([p.short,p.area,p.why,p.badge,types[p.category],...(p.facts||[])].join(' ')).includes(t)));$('mxResultCount').textContent=found.length+' '+(found.length===1?'place':'places')+(filter!=='all'?' · '+cats[filter]:'');$('mxResults').innerHTML=found.length?found.map(placeCard).join(''):`<div class="mx-empty">${icon('search')}<h2>No stops found.</h2><p>Try another name, area or category. Your saved places are still there.</p><button type="button" class="mx-primary" data-mx-reset>Clear search & filters</button></div>`;$('mxClearSearch').hidden=!query;}
-  function renderSaved(){const items=placeData.filter(p=>saved.has(String(p.id)));$('mxSavedCount').textContent=items.length?items.length+' '+(items.length===1?'place':'places')+' to come back to.':'Keep the places you’d like to come back to.';$('mxSavedList').innerHTML=items.length?items.map(placeCard).join(''):`<div class="mx-empty">${icon('save')}<h2>Your week starts here.</h2><p>Tap the bookmark on any place to keep it here. A mountain lunch, a lesson, your next favourite spot.</p><button type="button" class="mx-primary" data-mx-nav="places">Explore the places</button></div>`;$('mxSavedBadge').textContent=saved.size;$('mxSavedBadge').hidden=!saved.size;$('mxSaveBasis').textContent=persistent?'Saved on this device. These are your favourites, not group bookings.':'Browser storage is unavailable. Favourites will last for this visit only.';}
-  function save(id,undo=false){id=String(id);const p=getPlace(id);if(!p)return;const focus=document.activeElement,fromSaved=$('mxSavedList').contains(focus),position=Array.from($('mxSavedList').querySelectorAll('.mx-save')).indexOf(focus);const added=!saved.has(id);if(added)saved.add(id);else saved.delete(id);try{localStorage.setItem(KEY,JSON.stringify([...saved]));}catch(e){persistent=false;}syncSaveButtons();renderSaved();if(fromSaved){const controls=Array.from($('mxSavedList').querySelectorAll('.mx-save'));(controls[Math.min(Math.max(position,0),controls.length-1)]||$('mxSavedList').querySelector('button'))?.focus({preventScroll:true});}if(!undo){undoId=id;undoAdded=added;notify(added?'Saved for your week':'Removed from saved',true);}else notify('Change undone');}
-  function syncSaveButtons(){document.querySelectorAll('[data-mx-save]').forEach(b=>{const id=b.dataset.mxSave,on=saved.has(id),p=getPlace(id);b.setAttribute('aria-pressed',String(on));b.setAttribute('aria-label',(on?'Unsave ':'Save ')+(p?.short||'place'));});if(detailId){const on=saved.has(String(detailId));$('mxDetailSave').setAttribute('aria-pressed',String(on));$('mxDetailSave').setAttribute('aria-label',(on?'Unsave ':'Save ')+(getPlace(detailId)?.short||'place'));}}
-  function notify(text,undo=false){clearTimeout(toastTimer);toast.querySelector('span').textContent=text;$('mxUndo').hidden=!undo;toast.hidden=false;toastTimer=setTimeout(()=>toast.hidden=true,6000);}
-  function updateNext(){api.refreshTasks();const s=api.taskState(),days=s.days;let count=days>0?days:s.after?'✓':s.dayN,label=days>0?(days===1?'day to go':'days to go'):s.after?'trip complete':'of 8 days';const next=s.open?.[0];let task=next?plain(next.t):'Every group job is done.';if(days<=0)task=s.after?'Keep the memories. Find your favourites.':'Your week on the mountain.';$('mxNext').innerHTML=`<span class="mx-next-count">${count}<small>${label}</small></span><span class="mx-next-copy"><small>${days>0?(next?'Next for the group':'Ready for the week'):'Val Thorens · 2027'}</small><strong>${esc(task)}</strong>${days>0&&next?.late>0?'<p>Overdue · open the group checklist</p>':''}</span>${icon('arrow')}`;$('mxNext').dataset.mxPanel=days>0?'todo':'week';}
-  function plain(html){const d=document.createElement('div');d.innerHTML=html||'';return d.textContent;}
-  function renderGuide(i){i=Math.max(0,Math.min(chapters.length-1,i));if(guideIndex===i&&$('mxGuide').childElementCount)return;guideIndex=i;const c=chapters[i],copy=c.copy.cloneNode(true);copy.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));copy.querySelectorAll('.st-left,.st-cta,.st-credit').forEach(el=>el.remove());const h=copy.querySelector('h3'),h1=document.createElement('h1');h1.textContent=h.textContent;h.replaceWith(h1);const cta=c.cta?c.cta.cloneNode(true):null;if(cta){cta.className='mx-primary';cta.removeAttribute('id');}
-    $('mxGuide').innerHTML=`<div class="mx-guide-top"><button type="button" class="mx-back" data-mx-nav="home">${icon('back')}The guide</button><span class="mx-guide-step">${i+1} / ${chapters.length} · ${esc(c.nav)}</span></div><div class="mx-guide-photo"><img src="${esc(c.photo)}" alt="${esc(c.title)}"><button type="button" data-mx-place="${esc(c.place)}">Open gallery ↗</button></div><div class="mx-guide-content">${copy.innerHTML}<p class="mx-credit">${esc(c.credit)}</p>${i<chapters.length-1?`<button type="button" class="mx-guide-next" data-mx-guide="${i+1}"><span>Next · ${esc(chapters[i+1].nav)}</span>${icon('arrow')}</button>`:''}</div>${cta?'<div class="mx-guide-action">'+cta.outerHTML+'</div>':''}`;$('mxGuide').scrollTop=0;
+  function phone(){return matchMedia('(max-width:800px)').matches||root.classList.contains('pocket');}
+  function setScenicInert(on){document.querySelectorAll('body>.topbar,body>#intro,body>#story,body>.scroll-hint,body>.hero-credit,body>.skip').forEach(el=>{el.inert=on;});const old=$('explorer');if(old)old.inert=on||!old.classList.contains('ready');}
+  function mount(){if(embedded)return;if(dialog.open)dialog.close();$('mxDetail').appendChild(sheet);$('mxPanel').appendChild(dialog);sheet.classList.add('mx-inline-place');dialog.classList.add('mx-inline-trip');sheet.setAttribute('role','region');sheet.removeAttribute('aria-modal');dialog.setAttribute('role','region');dialog.removeAttribute('aria-modal');embedded=true;}
+  function unmount(){if(!embedded)return;current=null;app.inert=false;if(!lightbox.hidden)api.closePhoto();api.closePlace();if(dialog.open)dialog.close();sheetMarker.after(sheet);dialogMarker.after(dialog);sheet.classList.remove('mx-inline-place');dialog.classList.remove('mx-inline-trip');sheet.setAttribute('role','dialog');sheet.setAttribute('aria-modal','false');dialog.removeAttribute('role');dialog.setAttribute('aria-labelledby','tripTitle');embedded=false;detailId=null;}
+  function canonical(raw){let hash=String(raw||'').replace(/^#/,'');if(hash==='home'||!hash||hash==='end')return 'trip';if(hash==='saved'){collection='saved';return 'places';}if(['explore','explorer','stops'].includes(hash))return 'places';const aliases={stay:0,pictures:0,logistics:1,passes:2,lessons:2,fun:4,toboggan:4,'cime-caron':4,beyond:5,gear:6};if(Object.hasOwn(aliases,hash))return 'guide/'+aliases[hash];const stop=/^stop-?(\d+)$/.exec(hash);if(stop)return 'guide/'+Math.max(0,Math.min(chapters.length-1,+stop[1]-1));const guide=/^guide\/(\d+)$/.exec(hash);if(guide)return 'guide/'+Math.min(chapters.length-1,+guide[1]);if(['trip','places','guide'].includes(hash)||panels.some(p=>p[1]===hash))return hash;const place=/^p\/([^/]+)(\/photo)?$/.exec(hash);return place&&getPlace(place[1])?hash:'trip';}
+  function label(hash){if(hash==='trip')return 'Trip plan';if(hash==='places')return collection==='saved'?'Saved places':'Places';if(hash==='guide')return 'Guide';const g=/^guide\/(\d+)$/.exec(hash);if(g)return chapters[+g[1]]?.nav||'Guide';const p=panels.find(p=>p[1]===hash);if(p)return p[2];const m=/^p\/([^/]+)/.exec(hash);return m?(getPlace(m[1])?.short||'Place details'):'Trip plan';}
+  function stateFor(hash,extra={}){hash=canonical(hash);const p=/^p\/([^/]+)(\/photo)?$/.exec(hash),panel=panels.find(x=>x[1]===hash);const tab=hash==='guide'||hash.startsWith('guide/')?'guide':hash==='places'||p?'places':'trip',parent=panel?'trip':hash.startsWith('guide/')?'guide':p?'places':null;const origin=p?{returnTo:stateFor('places',{list:{filter:'all',region:'all',query:'',collection:'all'}})}:{};const state={mxFlow:2,hash,tab,parent,parentLabel:parent==='places'?'Places':parent?label(parent):'',previous:null,...origin,...extra,hash};if(hash==='places')state.list=cleanList(state.list)||readList();if(p?.[2]&&!state.underlay){state.underlay=stateFor('p/'+p[1]);state.parent=state.underlay.hash;state.parentLabel=label(state.parent);state.tab=state.underlay.tab;}return state;}
+  function readList(){return {filter,region,query,collection};}
+  function cleanList(value){if(!value||typeof value!=='object'||Array.isArray(value))return null;return {filter:Object.hasOwn(cats,value.filter)?value.filter:'all',region:['all','vt','meribel'].includes(value.region)?value.region:'all',query:typeof value.query==='string'?value.query.slice(0,500):'',collection:value.collection==='saved'?'saved':'all'};}
+  function validHash(hash){if(typeof hash!=='string'||hash.length>120)return false;if(['trip','places','guide'].includes(hash)||panels.some(p=>p[1]===hash))return true;const g=/^guide\/(\d+)$/.exec(hash);if(g)return +g[1]<chapters.length;const p=/^p\/([^/]+)(\/photo)?$/.exec(hash);return !!(p&&getPlace(p[1]));}
+  function cleanRoute(value,depth=0){if(!value||typeof value!=='object'||depth>8||!validHash(value.hash)||!['trip','places','guide'].includes(value.tab))return null;const safe=stateFor(value.hash,{tab:value.tab});if(validHash(value.parent)){safe.parent=value.parent;safe.parentLabel=typeof value.parentLabel==='string'?value.parentLabel.slice(0,160):label(value.parent);}if(validHash(value.previous))safe.previous=value.previous;if(['trip','places','guide'].includes(value.previousTab))safe.previousTab=value.previousTab;if(value.hash==='places')safe.list=cleanList(value.list)||readList();const returnTo=cleanRoute(value.returnTo,depth+1);if(returnTo&&returnTo.hash===safe.parent)safe.returnTo=returnTo;const underlay=cleanRoute(value.underlay,depth+1);if(value.hash.endsWith('/photo')&&underlay&&!underlay.hash.endsWith('/photo')){safe.underlay=underlay;safe.parent=underlay.hash;safe.parentLabel=label(underlay.hash);safe.tab=underlay.tab;}return safe;}
+  function listSignature(value){const list=cleanList(value)||readList();return JSON.stringify([list.filter,list.region,list.query,list.collection]);}
+  function validMemoryKey(value){if(typeof value!=='string'||value.length>4096)return false;const cut=value.indexOf('|'),rest=value.slice(cut+1),suffix=rest.indexOf('|'),hash=suffix<0?rest:rest.slice(0,suffix);if(cut<1||!['trip','places','guide'].includes(value.slice(0,cut))||!validHash(hash))return false;if(suffix<0)return hash!=='places';if(hash!=='places')return false;try{const signature=rest.slice(suffix+1),parts=JSON.parse(signature);return Array.isArray(parts)&&parts.length===4&&listSignature({filter:parts[0],region:parts[1],query:parts[2],collection:parts[3]})===signature;}catch(e){return false;}}
+  function hydrateSession(){try{const raw=sessionStorage.getItem(SESSION_KEY);if(!raw||raw.length>160000)return;const data=JSON.parse(raw);if(!data||data.version!==2)return;const list=cleanList(data.list);if(list){filter=list.filter;region=list.region;query=list.query;collection=list.collection;}for(const tab of ['trip','places','guide']){const route=cleanRoute(data.tabs?.[tab]);if(route&&route.tab===tab&&!route.underlay)tabLast[tab]=route;}sessionView=cleanRoute(data.view);if(Array.isArray(data.positions))data.positions.slice(0,200).forEach(entry=>{if(Array.isArray(entry)&&validMemoryKey(entry[0])&&Number.isFinite(entry[1])&&entry[1]>=0&&entry[1]<=10000000)positions.set(entry[0],entry[1]);});for(const [name,map] of [['guideExpanded',guideExpanded],['detailExpanded',detailExpanded]])if(Array.isArray(data[name]))data[name].slice(0,100).forEach(entry=>{if(Array.isArray(entry)&&validMemoryKey(entry[0])&&Array.isArray(entry[1]))map.set(entry[0],entry[1].slice(0,32).map(x=>x===true));});}catch(e){/* Storage may be unavailable or contain an older/malformed record. */}}
+  function persistSession(){try{const tabs={};for(const tab of ['trip','places','guide'])tabs[tab]=cleanRoute(tabLast[tab]);sessionStorage.setItem(SESSION_KEY,JSON.stringify({version:2,list:readList(),view:cleanRoute(current),tabs,positions:[...positions].slice(-200),guideExpanded:[...guideExpanded].slice(-100),detailExpanded:[...detailExpanded].slice(-100)}));}catch(e){/* Navigation remains usable when storage is unavailable. */}}
+  function useList(value){const next=cleanList(value)||readList(),changed=JSON.stringify(next)!==JSON.stringify(readList());filter=next.filter;region=next.region;query=next.query;collection=next.collection;$('mxSearch').value=query;$('mxRegion').value=region;if(changed){buildFilters();renderPlaces();}else syncCollection();}
+  function rememberList(){if(current?.hash==='places'){current={...current,list:readList()};tabLast[current.tab]={...current};positions.set(key(current),$('mxPlaces').scrollTop);commit(current,true);}persistSession();}
+  const key=s=>s?s.tab+'|'+s.hash+(s.hash==='places'?'|'+listSignature(s.list):''):'';
+  const urlFor=hash=>location.pathname+location.search+'#'+hash;
+  function commit(state,replace){history[replace?'replaceState':'pushState'](state,'',urlFor(state.hash));}
+  function visibleState(state=current){return state?.underlay||state;}
+  function scroller(state=current){const s=visibleState(state);if(!s)return null;if(/^p\//.test(s.hash))return sheet.querySelector('.sheet-scroll');if(panels.some(p=>p[1]===s.hash))return dialog.querySelector('.trip-data');if(s.hash.startsWith('guide/'))return $('mxGuide');return $(s.hash==='guide'?'mxGuideIndex':s.hash==='places'?'mxPlaces':'mxTrip');}
+  function remember(){const s=visibleState();if(!s||restorePending)return;const el=scroller(s);if(el)positions.set(key(s),el.scrollTop);if(app.contains(document.activeElement)&&!document.activeElement.closest('.mx-dock,.mx-header'))focusMemory.set(key(s),document.activeElement);if(s.hash.startsWith('guide/'))guideExpanded.set(key(s),Array.from($('mxGuide').querySelectorAll('details')).map(d=>d.open));if(/^p\/[^/]+$/.test(s.hash))detailExpanded.set(key(s),Array.from(sheet.querySelectorAll('details')).map(d=>d.open));if(!current?.underlay)tabLast[s.tab]={...s};}
+  function showView(id,state){['mxTrip','mxPlaces','mxGuideIndex','mxGuide','mxDetail','mxPanel'].forEach(n=>{$(n).hidden=n!==id;});app.classList.toggle('mx-reading',['mxGuide','mxDetail','mxPanel'].includes(id));app.querySelectorAll('.mx-dock [data-mx-nav]').forEach(b=>{if(b.dataset.mxNav===state.tab)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});}
+  function restore(state,returning){const version=++routeVersion;restorePending=true;requestAnimationFrame(()=>{if(version!==routeVersion||!active())return;const el=scroller(state);if(el)el.scrollTop=positions.get(key(state))||0;restorePending=false;if(current?.underlay)return;const remembered=returning?focusMemory.get(key(state)):null;if(remembered?.isConnected&&remembered.getClientRects().length&&!remembered.closest('[inert],.mx-dock,.mx-header'))remembered.focus({preventScroll:true});else{const target=state.hash.startsWith('p/')?$('mxDetailBack'):panels.some(p=>p[1]===state.hash)?dialog.querySelector('.mt-inline-back'):$(state.hash.startsWith('guide/')?'mxGuide':state.hash==='guide'?'mxGuideIndex':state.hash==='places'?'mxPlaces':'mxTrip');target?.focus({preventScroll:true});}});}
+  function renderGuide(state){const i=+state.hash.split('/')[1],c=chapters[i];if(guideIndex!==i||!$('mxGuide').childElementCount){guideIndex=i;const copy=c.copy.cloneNode(true);copy.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));copy.querySelectorAll('.st-left,.st-cta,.st-credit').forEach(el=>el.remove());const heading=copy.querySelector('h3'),h1=document.createElement('h1');h1.textContent=c.nav;heading.replaceWith(h1);const cta=c.cta?.cloneNode(true);if(cta){cta.className='mx-primary';cta.removeAttribute('id');if(cta.dataset.gallery){cta.dataset.mxPhoto=cta.dataset.gallery;cta.removeAttribute('data-gallery');}}
+      $('mxGuide').innerHTML=`<header class="mx-guide-top"><button type="button" class="mx-back" id="mxGuideBack" data-mx-back>${icon('back')}<span></span></button><span class="mx-guide-step">${esc(c.nav)}</span></header><div class="mx-guide-photo"><img src="${esc(c.photo)}" alt="${esc(c.title)}"><button type="button" data-mx-photo="${esc(c.place)}">Photos ${icon('arrow')}</button></div><div class="mx-guide-content">${copy.innerHTML}<p class="mx-credit">${esc(c.credit)}</p></div>${cta?'<div class="mx-guide-action">'+cta.outerHTML+'</div>':''}`;}
+    const b=$('mxGuideBack');b.dataset.mxBack=state.parent||'guide';b.querySelector('span').textContent=state.parentLabel||'Guide';b.setAttribute('aria-label','Back to '+(state.parentLabel||'Guide'));const expanded=guideExpanded.get(key(state))||[];$('mxGuide').querySelectorAll('details').forEach((d,n)=>{d.open=!!expanded[n];});
   }
-  function openPlace(id){const p=getPlace(id);if(!p){navigate('places',true);return;}detailId=String(p.id);lastFocus=document.activeElement;api.openPlace(p.id,lastFocus);sheet.querySelector('.sheet-scroll').scrollTop=0;$('mxDetailTitle').textContent=p.short;syncSaveButtons();extraLinks.innerHTML=$('sheetLinks').innerHTML;app.inert=true;sheet.setAttribute('role','dialog');sheet.setAttribute('aria-modal','true');sheet.setAttribute('aria-labelledby','propertyTitle');$('mxDetailBack').focus({preventScroll:true});}
-  function dismissPlace(){if(!sheet.hidden){api.closePlace();sheet.hidden=true;}detailId=null;app.inert=false;}
-  function backDetail(){if(history.state?.mxDepth>0){history.back();}else navigate(detailReturn,true);}
-  function route(){if(!active())return;const hash=currentHash();if(!hash.startsWith('p/'))dismissPlace();if(!panels.some(p=>p[1]===hash)&&$('tripDialog').open)$('tripDialog').close();
-    if(hash.startsWith('p/')){const placeRoute=/^p\/([^/]+)(\/photo)?$/.exec(hash);if(!placeRoute||!getPlace(placeRoute[1])){navigate('places',true);return;}const id=placeRoute[1],photo=!!placeRoute[2];if(detailId!==id||sheet.hidden){if(!detailId)detailReturn=screen==='guide'?'guide/'+guideIndex:screen;openPlace(id);}if(photo){history.replaceState({...history.state,mxPhoto:1},'',location.pathname+location.search+'#p/'+id+'/photo');api.openPhoto();}else if(!$('lightbox').hidden)api.closePhoto();return;}
-    const panel=panels.find(p=>p[1]===hash);if(panel){if(!['home','trip','guide'].includes(screen))view('trip',false);api.openTrip(panel[0],true);return;}
-    const m=/^(?:guide\/)(\d+)$/.exec(hash),sm=/^stop-?(\d+)$/.exec(hash);const aliases={stay:0,pictures:0,logistics:1,passes:2,lessons:2,fun:4,toboggan:4,'cime-caron':4,beyond:5,gear:6};
-    if(m||sm||Object.hasOwn(aliases,hash)){const i=m?+m[1]:sm?+sm[1]-1:aliases[hash];renderGuide(i);view('guide');return;}
-    const target=['home','places','saved','trip'].includes(hash)?hash:hash==='explore'||hash==='explorer'||hash==='stops'?'places':'home';view(target);if(lastFocus&&document.contains(lastFocus)&&lastFocus.offsetParent){lastFocus.focus({preventScroll:true});lastFocus=null;}}
-  const phone=()=>matchMedia('(max-width:800px)').matches||root.classList.contains('pocket');
-  function layout(){const was=root.classList.contains('mobile-ui'),now=phone();root.classList.toggle('mobile-ui',now);$('mxScene').hidden=now;setScenicInert(active());if(now)api.pauseScenic();else if(was)api.resumeScenic();if(active()){route();}else{app.inert=false;}}
-  window.SkiMobile={get active(){return active();},route,goGuide:i=>navigate('guide/'+i),closeDetail:backDetail};
-  // The app owns its navigation. Original data actions still run on the original elements.
-  document.addEventListener('click',e=>{if(!active())return;const t=e.target.closest('button,a');if(!t)return;
-    if(t.closest('#mobileApp')||t.closest('.mx-sheet-top')){
-      if(t.dataset.mxNav){e.preventDefault();e.stopImmediatePropagation();navigate(t.dataset.mxNav);return;}
-      if(t.dataset.mxGuide!==undefined){e.preventDefault();e.stopImmediatePropagation();navigate('guide/'+t.dataset.mxGuide);return;}
-      if(t.dataset.mxPanel){e.preventDefault();e.stopImmediatePropagation();navigate(t.dataset.mxPanel);return;}
-      if(t.dataset.mxSave){e.preventDefault();e.stopImmediatePropagation();save(t.dataset.mxSave);return;}
-      if(t.dataset.mxPlace){e.preventDefault();e.stopImmediatePropagation();detailReturn=screen==='guide'?'guide/'+guideIndex:screen;navigate('p/'+t.dataset.mxPlace);return;}
-      if(t.dataset.mxFilter){e.preventDefault();filter=t.dataset.mxFilter;app.querySelectorAll('[data-mx-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b===t)));renderPlaces();return;}
-      if(t.hasAttribute('data-mx-reset')){query='';filter='all';region='all';$('mxSearch').value='';$('mxRegion').value='all';buildFilters();renderPlaces();return;}
-      if(t.dataset.openTrip){e.preventDefault();e.stopImmediatePropagation();navigate(panels.find(p=>p[0]===t.dataset.openTrip)?.[1]||'trip');return;}
-      const id=t.dataset.poi||t.dataset.gallery||t.dataset.openPlace;if(id){e.preventDefault();e.stopImmediatePropagation();detailReturn=screen==='guide'?'guide/'+guideIndex:screen;navigate('p/'+id);return;}
-    }
-    if(t.id==='closeTrip'){e.preventDefault();e.stopImmediatePropagation();if(history.state?.mxDepth>0)history.back();else navigate('trip',true);return;}
-    if(t.dataset.trip&&t.closest('#tripDialog')){e.preventDefault();e.stopImmediatePropagation();navigate(panels.find(p=>p[0]===t.dataset.trip)?.[1]||'trip',true);}
-  },true);
-  window.addEventListener('popstate',e=>{if(!active())return;e.stopImmediatePropagation();if(!$('lightbox').hidden&&!e.state?.mxPhoto)api.closePhoto();route();},true);
-  window.addEventListener('hashchange',()=>{if(active())route();});
-  $('mxSearch').addEventListener('input',e=>{query=e.target.value;renderPlaces();});$('mxClearSearch').addEventListener('click',()=>{query='';$('mxSearch').value='';renderPlaces();$('mxSearch').focus();});$('mxRegion').addEventListener('change',e=>{region=e.target.value;renderPlaces();});
-  $('mxUndo').addEventListener('click',()=>{if(undoId!==null&&saved.has(undoId)===undoAdded)save(undoId,true);undoId=null;});
-  $('mxDetailBack').addEventListener('click',backDetail);$('mxDetailSave').addEventListener('click',()=>save(detailId));
-  async function share(place){const p=place?getPlace(detailId):null,url=new URL(location.href);url.hash=p?'p/'+p.id:'home';const data={title:p?p.short:'Ski 2027 · Val Thorens',url:url.href};try{if(navigator.share){await navigator.share(data);return;}if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(url.href);notify('Link copied');}else{window.prompt('Copy this link',url.href);}}catch(e){if(e.name!=='AbortError')notify('Could not share. Copy the address from your browser.');}}
-  $('mxDetailShare').addEventListener('click',()=>share(true));$('mxShare').addEventListener('click',()=>share(false));
+  function ensurePlace(id,state){const p=getPlace(id);if(detailId!==String(id)||sheet.hidden){detailId=String(id);api.openPlace(p.id,document.activeElement);extraLinks.innerHTML=$('sheetLinks').innerHTML;}const expanded=detailExpanded.get(key({...state,hash:'p/'+id}))||[];sheet.querySelectorAll('details').forEach((d,i)=>{d.open=!!expanded[i];});$('mxDetailTitle').textContent=p.short;$('mxDetailParent').textContent=state.parentLabel||label(state.parent||'places');$('mxDetailBack').setAttribute('aria-label','Back to '+$('mxDetailParent').textContent);sheet.setAttribute('role','region');sheet.removeAttribute('aria-modal');sheet.inert=false;syncSaved();}
+  function renderOrdinary(state,returning){app.inert=false;const place=/^p\/([^/]+)$/.exec(state.hash),panel=panels.find(p=>p[1]===state.hash);if(!place&&!sheet.hidden){api.closePlace();detailId=null;}if(!panel&&dialog.open)dialog.close();if(place){showView('mxDetail',state);ensurePlace(place[1],state);}else if(panel){showView('mxPanel',state);api.openTrip(panel[0],true);if(dialog.matches(':modal')){dialog.close();dialog.show();}if(!dialog.open)dialog.show();dialog.setAttribute('role','region');dialog.removeAttribute('aria-modal');window.__mobileTripRefresh?.();const b=dialog.querySelector('.mt-inline-back');if(b){b.dataset.mxBack=state.parent||'trip';b.setAttribute('aria-label','Back to '+(state.parentLabel||'Trip plan'));b.querySelector('span').textContent=state.parentLabel||'Trip plan';}}else if(state.hash.startsWith('guide/')){renderGuide(state);showView('mxGuide',state);}else if(state.hash==='guide'){showView('mxGuideIndex',state);}else if(state.hash==='places'){useList(state.list);showView('mxPlaces',state);}else{showView('mxTrip',state);updateNext();}restore(state,returning);}
+  function apply(state,returning=false){if(!active())return;mount();current=state;const photo=/^p\/([^/]+)\/photo$/.exec(state.hash);if(photo){const underlay=state.underlay||stateFor('p/'+photo[1]);renderOrdinary(underlay,returning);ensurePlace(photo[1],underlay);if(underlay.hash!=='p/'+photo[1])$('mxDetail').hidden=true;api.openPhoto();app.inert=true;if(lightbox.hidden){app.inert=false;current=underlay;renderOrdinary(underlay,true);commit(underlay,true);persistSession();notify('Photos are unavailable for this place.');return;}}else{if(!lightbox.hidden)api.closePhoto();renderOrdinary(state,returning);tabLast[state.tab]={...state};}commit(current,true);persistSession();}
+  function go(hash,options={}){remember();const state=stateFor(hash,{...options.state,previous:current?.hash||null,previousTab:current?.tab||null});commit(state,!!options.replace);apply(state,!!options.back);}
+  function route(){if(!active())return;remember();const raw=location.hash.slice(1),hash=canonical(raw),stored=history.state,restored=stored?.mxFlow===2&&stored.hash===hash?cleanRoute(stored):null;if(raw==='saved'){collection='saved';renderPlaces();}const reload=performance.getEntriesByType('navigation')[0]?.type==='reload';const savedView=!current&&reload&&sessionView?.hash===hash?sessionView:null;apply(raw==='saved'?stateFor('places',{list:readList()}):restored||savedView||stateFor(hash),true);}
+  function back(target){const parent=target||current?.parent||current?.tab||'trip';if(current?.previous===parent&&current?.previousTab===current?.tab&&history.state?.mxFlow===2){history.back();return;}const returnState=current?.underlay?.hash===parent?current.underlay:current?.returnTo?.hash===parent?current.returnTo:stateFor(parent,{tab:current?.tab||stateFor(parent).tab});go(parent,{replace:true,back:true,state:returnState});}
+  function selectTab(tab){if(current?.tab===tab){if(current.hash===tab){scroller()?.scrollTo({top:0,behavior:'auto'});return;}go(tab,{state:{tab}});return;}const resume=tabLast[tab];go(resume?.hash||tab,{state:resume||{tab},back:!!resume});}
+  function drill(hash){const origin=visibleState();go(hash,{state:origin?{tab:origin.tab,parent:origin.hash,parentLabel:label(origin.hash),returnTo:{...origin}}:{}});}
+  function photos(id){const p=getPlace(id);if(!p)return;if(!(p.photos||[]).length){notify('No photographs are available for this place.');return;}const origin=visibleState()||stateFor('p/'+id);go('p/'+p.id+'/photo',{state:{tab:origin.tab,parent:origin.hash,parentLabel:label(origin.hash),underlay:{...origin}}});}
+  const normalize=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  function card(p){const on=saved.has(String(p.id)),photos=p.photos||[],name=p.short||'Place details',area=p.category==='stays'?p.area:p.region==='vt'?'Val Thorens':'Beyond Val Thorens';return `<article class="mx-place"><button type="button" class="mx-place-open" data-mx-place="${esc(p.id)}" aria-label="View ${esc(name)}"><span class="mx-photo${photos.length?'':' is-missing'}">${photos.length?`<img src="${esc(photos[0])}" alt="" loading="lazy" decoding="async">`:''}<span class="mx-photo-fallback">${icon('mountain')}Photo to come</span></span><span class="mx-place-info"><span class="mx-place-type">${esc(types[p.category]||'Place')}</span><strong class="mx-place-title">${esc(name)}</strong><span class="mx-place-area">${esc(area||'Details to confirm')}</span>${p.badge?`<span class="mx-place-note">${esc(p.badge)}</span>`:''}</span></button><button type="button" class="mx-save" data-mx-save="${esc(p.id)}" aria-pressed="${on}" aria-label="${on?'Unsave':'Save'} ${esc(name)}">${icon('save')}</button></article>`;}
+  function buildFilters(){$('mxFilters').innerHTML=Object.entries(cats).map(([k,name])=>`<button type="button" class="mx-filter" data-mx-filter="${k}" aria-pressed="${k===filter}">${name}</button>`).join('');}
+  function syncCollection(){$('mxCollections').querySelectorAll('[data-mx-collection]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mxCollection===collection)));$('mxSavedCount').textContent=saved.size;$('mxSaveBasis').hidden=collection!=='saved';$('mxSaveBasis').textContent=persistent?'Saved on this device. Favourites are separate from group bookings.':'Browser storage is unavailable. Favourites last for this visit only.';}
+  function renderPlaces(){const terms=normalize(query).trim().split(/\s+/).filter(Boolean),found=places.filter(p=>(collection!=='saved'||saved.has(String(p.id)))&&(filter==='all'||p.category===filter)&&(region==='all'||p.region===region)&&terms.every(t=>normalize([p.short,p.area,p.why,p.badge,types[p.category],...(p.facts||[])].join(' ')).includes(t)));$('mxResultCount').textContent=found.length+' '+(found.length===1?'place':'places')+(collection==='saved'?' saved':'');const empty=collection==='saved'&&!saved.size;$('mxResults').innerHTML=found.length?found.map(card).join(''):`<div class="mx-empty">${icon(empty?'save':'search')}<h2>${empty?'Your favourites belong here.':'No places found.'}</h2><p>${empty?'Save a place with its bookmark, then find it here.':'Try another search, category or area.'}</p><button type="button" class="mx-primary" ${empty?'data-mx-collection="all"':'data-mx-reset'}>${empty?'Browse all places':'Clear search & filters'}</button></div>`;$('mxClearSearch').hidden=!query;syncCollection();}
+  function syncSaved(){document.querySelectorAll('[data-mx-save]').forEach(b=>{const on=saved.has(b.dataset.mxSave);b.setAttribute('aria-pressed',String(on));b.setAttribute('aria-label',(on?'Unsave ':'Save ')+(getPlace(b.dataset.mxSave)?.short||'place'));});if(detailId){const on=saved.has(detailId);$('mxDetailSave').setAttribute('aria-pressed',String(on));$('mxDetailSave').setAttribute('aria-label',(on?'Unsave ':'Save ')+(getPlace(detailId)?.short||'place'));}syncCollection();}
+  function save(id,undo=false){id=String(id);if(!getPlace(id))return;const focus=document.activeElement,inside=$('mxResults').contains(focus),at=Array.from($('mxResults').querySelectorAll('.mx-save')).indexOf(focus),added=!saved.has(id);if(added)saved.add(id);else saved.delete(id);try{localStorage.setItem(KEY,JSON.stringify([...saved]));}catch(e){persistent=false;}syncSaved();if(collection==='saved'){renderPlaces();if(inside){const buttons=Array.from($('mxResults').querySelectorAll('.mx-save'));(buttons[Math.min(Math.max(at,0),buttons.length-1)]||$('mxResults').querySelector('button'))?.focus({preventScroll:true});}}if(!undo){undoId=id;undoAdded=added;notify(added?'Saved to Places':'Removed from Saved',true);}else notify('Change undone');}
+  function notify(text,undo=false){clearTimeout(toastTimer);toast.querySelector('span').textContent=text;$('mxUndo').hidden=!undo;toast.hidden=false;toastTimer=setTimeout(()=>{toast.hidden=true;},6000);}
+  function updateNext(){api.refreshTasks();const s=api.taskState(),next=s.open?.[0],d=document.createElement('div');d.innerHTML=next?.t||'';const title=s.days<=0?(s.after?'The week is complete':'Your week on the mountain'):next?d.textContent:'Every group job is done.';$('mxNext').innerHTML=`${icon('check')}<span class="mx-next-copy"><small>${s.days>0?'Next group job':'The week'}</small><strong>${esc(title)}</strong></span>${icon('arrow')}`;$('mxNext').dataset.mxPanel=s.days>0?'todo':'week';}
+  async function share(place){const p=place?getPlace(detailId):null,url=new URL(location.href);url.hash=p?'p/'+p.id:'trip';try{if(navigator.share)await navigator.share({title:p?p.short:'Ski 2027 · Val Thorens',url:url.href});else if(navigator.clipboard&&isSecureContext){await navigator.clipboard.writeText(url.href);notify('Link copied');}else window.prompt('Copy this link',url.href);}catch(e){if(e.name!=='AbortError')notify('Could not share. Copy the address from your browser.');}}
   function syncMotion(){const off=root.classList.contains('motion-off');$('mxMotion').setAttribute('aria-pressed',String(off));$('mxMotion').querySelector('span').textContent=off?'Motion off':'Motion on';}
+  function layout(){const was=root.classList.contains('mobile-ui');root.classList.toggle('mobile-ui',phone());$('mxScene').hidden=phone();setScenicInert(active());if(active()){mount();api.pauseScenic();route();}else{unmount();if(was)api.resumeScenic();}}
+  window.SkiMobile={get active(){return active();},route,goGuide:i=>drill('guide/'+i),closeDetail:()=>back(),openPhoto:()=>photos(detailId),closePhoto:()=>back(),goPanel:id=>drill(panels.find(p=>p[0]===id)?.[1]||'trip')};
+  document.addEventListener('click',e=>{if(!active())return;const raw=e.target;if(raw===lightbox){e.preventDefault();e.stopImmediatePropagation();back();return;}const t=raw.closest('button,a');if(!t)return;let action=null;
+    if(t.id==='lbClose')action=()=>back();
+    else if(t.id==='openLightbox')action=()=>photos(detailId);
+    else if(['closeSheet','sheetGrip','mxDetailBack'].includes(t.id))action=()=>back();
+    else if(t.id==='closeTrip'||t.hasAttribute('data-mx-back'))action=()=>back(t.dataset.mxBack||current?.parent||'trip');
+    else if(t.dataset.trip&&t.closest('#tripDialog'))action=()=>go(panels.find(p=>p[0]===t.dataset.trip)?.[1]||'trip',{replace:true,state:{tab:current?.tab,parent:current?.parent,parentLabel:current?.parentLabel,returnTo:current?.returnTo}});
+    else if(t.closest('#mobileApp')){if(t.dataset.mxNav)action=()=>selectTab(t.dataset.mxNav);else if(t.dataset.mxGuide!==undefined)action=()=>drill('guide/'+t.dataset.mxGuide);else if(t.dataset.mxPanel)action=()=>drill(t.dataset.mxPanel);else if(t.dataset.mxPlace)action=()=>drill('p/'+t.dataset.mxPlace);else if(t.dataset.mxPhoto||t.dataset.gallery)action=()=>photos(t.dataset.mxPhoto||t.dataset.gallery);else if(t.dataset.mxSave)action=()=>save(t.dataset.mxSave);else if(t.dataset.mxCollection)action=()=>{collection=t.dataset.mxCollection;renderPlaces();$('mxPlaces').scrollTop=0;};else if(t.dataset.mxFilter)action=()=>{filter=t.dataset.mxFilter;buildFilters();renderPlaces();$('mxFilters').querySelector('[data-mx-filter="'+filter+'"]').focus({preventScroll:true});};else if(t.hasAttribute('data-mx-reset'))action=()=>{query='';filter='all';region='all';$('mxSearch').value='';$('mxRegion').value='all';buildFilters();renderPlaces();$('mxSearch').focus({preventScroll:true});};else if(t.dataset.openTrip)action=()=>drill(panels.find(p=>p[0]===t.dataset.openTrip)?.[1]||'trip');else if(t.dataset.poi||t.dataset.openPlace)action=()=>drill('p/'+(t.dataset.poi||t.dataset.openPlace));}
+    if(action){e.preventDefault();e.stopImmediatePropagation();const listAction=t.dataset.mxCollection||t.dataset.mxFilter||t.hasAttribute('data-mx-reset');if(listAction)remember();action();if(listAction)rememberList();}
+  },true);
+  $('photo').addEventListener('click',e=>{if(!active())return;e.preventDefault();e.stopImmediatePropagation();photos(detailId);},true);
+  document.addEventListener('keydown',e=>{if(!active()||e.key!=='Escape')return;if(!lightbox.hidden){e.preventDefault();e.stopImmediatePropagation();back();}else if(current?.parent&&!/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)){e.preventDefault();e.stopImmediatePropagation();back();}},true);
+  window.addEventListener('popstate',e=>{if(!active())return;e.stopImmediatePropagation();route();},true);
+  window.addEventListener('hashchange',()=>{if(active()&&current?.hash!==canonical(location.hash.slice(1)))route();});
+  dialog.addEventListener('cancel',e=>{if(active()){e.preventDefault();back();}});
+  new MutationObserver(()=>{if(!active())return;if(!lightbox.hidden)app.inert=true;else{app.inert=false;if(current?.underlay)back();}}).observe(lightbox,{attributes:true,attributeFilter:['hidden']});
+  $('mxSearch').addEventListener('input',e=>{remember();query=e.target.value;renderPlaces();rememberList();});$('mxClearSearch').addEventListener('click',()=>{remember();query='';$('mxSearch').value='';renderPlaces();rememberList();$('mxSearch').focus();});$('mxRegion').addEventListener('change',e=>{remember();region=e.target.value;renderPlaces();rememberList();});
+  $('mxDetailSave').addEventListener('click',()=>save(detailId));$('mxDetailShare').addEventListener('click',()=>share(true));$('mxShare').addEventListener('click',()=>share(false));$('mxUndo').addEventListener('click',()=>{if(undoId!==null&&saved.has(undoId)===undoAdded)save(undoId,true);undoId=null;});
   $('mxMotion').addEventListener('click',()=>{$('motion').click();syncMotion();});new MutationObserver(syncMotion).observe(root,{attributes:true,attributeFilter:['class']});
-  $('mxScene').addEventListener('click',()=>{document.body.classList.remove('directory-open');dismissPlace();setScenicInert(false);writeHash('',true);api.resumeScenic();desktopButton.focus();});
-  document.addEventListener('keydown',e=>{if(!active())return;const light=$('lightbox');if(e.key==='Escape'&&!light.hidden)return;if(e.key==='Escape'&&!sheet.hidden){e.preventDefault();e.stopImmediatePropagation();backDetail();return;}if(e.key==='Tab'&&!sheet.hidden&&light.hidden){const f=Array.from(sheet.querySelectorAll('button,a[href],summary,input,select')).filter(x=>x.offsetParent&&!x.hidden);const a=f[0],z=f[f.length-1];if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus();}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus();}}},true);
-  $('tripDialog').addEventListener('cancel',e=>{if(!active())return;e.preventDefault();if(history.state?.mxDepth>0)history.back();else navigate('trip',true);});
-  $('tripDialog').addEventListener('close',()=>{if(active()){updateNext();if(panels.some(p=>p[1]===currentHash()))navigate('trip',true);}});
-  new MutationObserver(()=>{if(!active())return;if(sheet.hidden){app.inert=false;if(detailId&&currentHash().startsWith('p/')){detailId=null;navigate(detailReturn,true);}}}).observe(sheet,{attributes:true,attributeFilter:['hidden']});
-  new MutationObserver(()=>{if(!active())return;const photo=$('lightbox');if(!photo.hidden&&!history.state?.mxPhoto){const state={...(history.state||{}),mx:1,mxPhoto:1,mxDepth:(Number(history.state?.mxDepth)||0)+1};history.pushState(state,'',location.pathname+location.search+'#p/'+detailId+'/photo');}else if(photo.hidden&&history.state?.mxPhoto){if(history.state.mxDepth>0)history.back();else navigate('p/'+detailId,true);}}).observe($('lightbox'),{attributes:true,attributeFilter:['hidden']});
-  app.addEventListener('error',e=>{if(e.target.tagName==='IMG'){const photo=e.target.closest('.mx-photo');if(photo)photo.classList.add('is-missing');else{e.target.style.visibility='hidden';e.target.parentElement.setAttribute('aria-label','Photo unavailable');e.target.parentElement.setAttribute('data-mx-missing','');}}},true);
+  $('mxScene').addEventListener('click',()=>{remember();current=null;unmount();document.body.classList.remove('directory-open');setScenicInert(false);history.replaceState(null,'',location.pathname+location.search);api.resumeScenic();desktopButton.focus();});
+  app.addEventListener('error',e=>{if(e.target.tagName!=='IMG')return;const photo=e.target.closest('.mx-photo');if(photo)photo.classList.add('is-missing');else{e.target.style.visibility='hidden';e.target.parentElement.dataset.mxMissing='';e.target.parentElement.setAttribute('aria-label','Photo unavailable');}},true);
   $('photo').addEventListener('error',()=>{$('openLightbox').disabled=true;});$('photo').addEventListener('load',()=>{$('openLightbox').disabled=false;});
-  window.addEventListener('storage',e=>{if(e.key!==KEY)return;try{const a=JSON.parse(e.newValue||'[]');saved=new Set((Array.isArray(a)?a:[]).filter(id=>getPlace(id)).map(String));syncSaveButtons();renderSaved();}catch(err){}});
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&active())updateNext();});
-  $('mxGuides').innerHTML=chapters.map(c=>`<button type="button" class="mx-guide-card" data-mx-guide="${c.i}"><img src="${esc(c.photo)}" alt="" loading="lazy" decoding="async"><span><small>Chapter ${String(c.i+1).padStart(2,'0')}</small><strong>${esc(c.nav)}</strong><p>${esc(c.fact)}</p></span>${icon('arrow')}</button>`).join('');
-  const featured=['vt-fruitiere','vt-cimecaron','vt-esf','vt-folie'].map(getPlace).filter(Boolean);$('mxFeatured').innerHTML=featured.map(placeCard).join('');buildFilters();renderPlaces();renderSaved();syncMotion();if(!phone()&&/^(home|places|saved|trip|guide\/\d+|p\/.+)$/.test(currentHash()))document.body.classList.add('directory-open');layout();
-  let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{const now=phone();if(now!==root.classList.contains('mobile-ui'))layout();},120);});
-  // Refresh the next-up summary when the existing shared board finishes loading.
-  new MutationObserver(()=>{if(active())updateNext();}).observe($('groupTasks'),{childList:true});
+  window.addEventListener('storage',e=>{if(e.key!==KEY)return;try{const a=JSON.parse(e.newValue||'[]');saved=new Set((Array.isArray(a)?a:[]).filter(getPlace).map(String));syncSaved();renderPlaces();}catch(err){}});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden){remember();persistSession();}else if(active())updateNext();});
+  window.addEventListener('pagehide',()=>{remember();persistSession();});
+  hydrateSession();$('mxSearch').value=query;$('mxRegion').value=region;
+  $('mxGuides').innerHTML=chapters.map(c=>`<button type="button" class="mx-guide-card" data-mx-guide="${c.i}"><img src="${esc(c.photo)}" alt="" loading="lazy" decoding="async"><span><strong>${esc(c.nav)}</strong><p>${esc(c.fact)}</p></span>${icon('arrow')}</button>`).join('');buildFilters();renderPlaces();syncMotion();
+  const initial=location.hash.slice(1);if(!phone()&&initial&&/^(trip|home|places|saved|guide(?:\/\d+)?|p\/.+|todo|bookings|week|packing|costs|food|whos-in|gotchas|sources)$/.test(initial))document.body.classList.add('directory-open');layout();
+  let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(phone()!==root.classList.contains('mobile-ui'))layout();},120);});new MutationObserver(()=>{if(active())updateNext();}).observe($('groupTasks'),{childList:true});
 })();
 
 /* Phone presentation only. Shared-state values and their event handlers stay untouched. */
@@ -2198,6 +2360,8 @@ html.mobile-ui #tripDialog .mt-bookings>tfoot td.nm::before{display:none}
   var dialog=document.getElementById('tripDialog');
   if(!dialog||document.getElementById('mtTripSection'))return;
   var header=dialog.querySelector('.trip-header'),data=dialog.querySelector('.trip-data');
+  var originalDialogLabel=dialog.getAttribute('aria-labelledby')||'tripTitle';
+  var originalDialogRole=dialog.getAttribute('role');
   var tabs=Array.from(dialog.querySelectorAll('[data-trip]'));
   var panels=Array.from(data.querySelectorAll('.panel'));
   function referenceNote(panelId,title,copy){
@@ -2214,6 +2378,14 @@ html.mobile-ui #tripDialog .mt-bookings>tfoot td.nm::before{display:none}
   jump.innerHTML='<div class="mt-jump-heading"><label for="mtTripSection">Trip details</label><output id="mtTripPosition" aria-hidden="true"></output></div><select id="mtTripSection" aria-label="Choose trip section"></select><p class="mt-section-description" id="mtTripDescription"></p>';
   header.appendChild(jump);
   var select=jump.querySelector('select'),position=jump.querySelector('output'),description=jump.querySelector('p');
+  var inlineHeader=document.createElement('header');
+  inlineHeader.className='mt-inline-header';
+  inlineHeader.innerHTML='<button type="button" class="mt-inline-back" data-mx-back aria-label="Back to Trip plan"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="m14 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Trip plan</span></button><h2 class="mt-inline-title" id="mtInlineTitle"></h2><p class="mt-inline-description" id="mtInlineDescription"></p>';
+  dialog.insertBefore(inlineHeader,header);
+  var inlineTitle=inlineHeader.querySelector('h2'),inlineDescription=inlineHeader.querySelector('p');
+  var sectionTitles={p4:'To do',p10:'Packing',p3:'Bookings',p2:'The week',p5:'Costs',p8:'Food plan',p9:'Who’s in',p6:'Good to know',p7:'Sources'};
+  var bookingPersonKey='ski2027.explorer.booking-person.v1',preferredBookingPerson='';
+  try{preferredBookingPerson=localStorage.getItem(bookingPersonKey)||'';}catch(e){}
   var scrollPositions=Object.create(null),current=null;
   tabs.forEach(function(tab,i){
     var id=tab.dataset.trip,option=document.createElement('option');
@@ -2222,7 +2394,7 @@ html.mobile-ui #tripDialog .mt-bookings>tfoot td.nm::before{display:none}
     var panel=document.getElementById(id);
     if(panel){panel.setAttribute('role','tabpanel');panel.setAttribute('aria-labelledby',tab.id);}
   });
-  function mobile(){return document.documentElement.classList.contains('mobile-ui');}
+  function mobile(){return document.documentElement.classList.contains('mobile-ui')||document.body.classList.contains('directory-open');}
   function syncSection(){
     var panel=panels.find(function(p){return p.classList.contains('on');});
     if(!panel)return;
@@ -2234,6 +2406,13 @@ html.mobile-ui #tripDialog .mt-bookings>tfoot td.nm::before{display:none}
     select.value=next;
     position.textContent=String(tabs.findIndex(function(t){return t.dataset.trip===next;})+1).padStart(2,'0')+' / '+String(tabs.length).padStart(2,'0');
     description.textContent=descriptions[next]||'';
+    inlineTitle.textContent=sectionTitles[next]||tabs.find(function(t){return t.dataset.trip===next;}).textContent.trim();
+    inlineDescription.textContent=descriptions[next]||'';
+    var embedded=dialog.classList.contains('mx-inline-trip');
+    setAttr(dialog,'aria-labelledby',embedded?'mtInlineTitle':originalDialogLabel);
+    if(embedded)setAttr(dialog,'role','region');
+    else if(originalDialogRole)setAttr(dialog,'role',originalDialogRole);
+    else dialog.removeAttribute('role');
     panels.forEach(function(p){p.setAttribute('aria-hidden',String(p.id!==next));});
   }
   select.addEventListener('change',function(){
@@ -2246,7 +2425,7 @@ html.mobile-ui #tripDialog .mt-bookings>tfoot td.nm::before{display:none}
   dialog.addEventListener('click',function(e){if(e.target.closest('[data-trip]')&&current)scrollPositions[current]=data.scrollTop;},true);
   var panelObserver=new MutationObserver(syncSection);
   panels.forEach(function(p){panelObserver.observe(p,{attributes:true,attributeFilter:['class']});});
-  new MutationObserver(function(){if(dialog.open)syncSection();}).observe(dialog,{attributes:true,attributeFilter:['open']});
+  new MutationObserver(function(){if(dialog.open){syncSection();if(mobile()&&current)data.scrollTop=scrollPositions[current]||0;}}).observe(dialog,{attributes:true,attributeFilter:['open','class']});
 
   function setAttr(el,name,value){if(el.getAttribute(name)!==value)el.setAttribute(name,value);}
   function addSpan(parent,className,text){var s=parent.querySelector('.'+className);if(!s){s=document.createElement('span');s.className=className;parent.appendChild(s);}if(s.textContent!==text)s.textContent=text;return s;}
@@ -2276,17 +2455,22 @@ html.mobile-ui #tripDialog .mt-bookings>tfoot td.nm::before{display:none}
     var filter=document.getElementById('mtBookingPerson');
     if(!filter){
       var box=document.createElement('div');box.className='mt-booking-filter';
-      box.innerHTML='<label for="mtBookingPerson">Show bookings for</label><select id="mtBookingPerson" aria-label="Filter bookings by person"></select><p class="mt-booking-empty" id="mtBookingEmpty" hidden>No confirmed guests yet. Update Who’s in to start tracking bookings.</p>';
+      box.innerHTML='<label for="mtBookingPerson">Show bookings for</label><select id="mtBookingPerson" aria-label="Filter bookings by person" aria-describedby="mtBookingFilterScope"></select><small class="mt-filter-scope" id="mtBookingFilterScope">Your choice stays on this device.</small><p class="mt-booking-empty" id="mtBookingEmpty" hidden>No confirmed guests yet. Update Who’s in to start tracking bookings.</p>';
       table.parentElement.before(box);filter=box.querySelector('select');
-      filter.addEventListener('change',applyPersonFilter);
+      filter.addEventListener('change',function(){
+        preferredBookingPerson=filter.value;
+        try{localStorage.setItem(bookingPersonKey,preferredBookingPerson);}catch(e){}
+        applyPersonFilter();
+      });
     }
     var signature=JSON.stringify(names);
     if(filter.dataset.names!==signature){
-      var previous=filter.value;filter.replaceChildren();
+      var previous=filter.value||preferredBookingPerson;filter.replaceChildren();
       [''].concat(names).forEach(function(name){var o=document.createElement('option');o.value=name;o.textContent=name||'Everyone · '+names.length+(names.length===1?' person':' people');filter.appendChild(o);});
       filter.dataset.names=signature;filter.value=names.includes(previous)?previous:'';
     }
     document.getElementById('mtBookingEmpty').hidden=names.length>0;
+    var summary=document.getElementById('bkSummary');if(summary)summary.hidden=!names.length;
     applyPersonFilter();
   }
   function applyPersonFilter(){

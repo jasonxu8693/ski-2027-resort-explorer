@@ -4,6 +4,8 @@
   var dialog=document.getElementById('tripDialog');
   if(!dialog||document.getElementById('mtTripSection'))return;
   var header=dialog.querySelector('.trip-header'),data=dialog.querySelector('.trip-data');
+  var originalDialogLabel=dialog.getAttribute('aria-labelledby')||'tripTitle';
+  var originalDialogRole=dialog.getAttribute('role');
   var tabs=Array.from(dialog.querySelectorAll('[data-trip]'));
   var panels=Array.from(data.querySelectorAll('.panel'));
   function referenceNote(panelId,title,copy){
@@ -20,6 +22,14 @@
   jump.innerHTML='<div class="mt-jump-heading"><label for="mtTripSection">Trip details</label><output id="mtTripPosition" aria-hidden="true"></output></div><select id="mtTripSection" aria-label="Choose trip section"></select><p class="mt-section-description" id="mtTripDescription"></p>';
   header.appendChild(jump);
   var select=jump.querySelector('select'),position=jump.querySelector('output'),description=jump.querySelector('p');
+  var inlineHeader=document.createElement('header');
+  inlineHeader.className='mt-inline-header';
+  inlineHeader.innerHTML='<button type="button" class="mt-inline-back" data-mx-back aria-label="Back to Trip plan"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="m14 6-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Trip plan</span></button><h2 class="mt-inline-title" id="mtInlineTitle"></h2><p class="mt-inline-description" id="mtInlineDescription"></p>';
+  dialog.insertBefore(inlineHeader,header);
+  var inlineTitle=inlineHeader.querySelector('h2'),inlineDescription=inlineHeader.querySelector('p');
+  var sectionTitles={p4:'To do',p10:'Packing',p3:'Bookings',p2:'The week',p5:'Costs',p8:'Food plan',p9:'Who’s in',p6:'Good to know',p7:'Sources'};
+  var bookingPersonKey='ski2027.explorer.booking-person.v1',preferredBookingPerson='';
+  try{preferredBookingPerson=localStorage.getItem(bookingPersonKey)||'';}catch(e){}
   var scrollPositions=Object.create(null),current=null;
   tabs.forEach(function(tab,i){
     var id=tab.dataset.trip,option=document.createElement('option');
@@ -28,7 +38,7 @@
     var panel=document.getElementById(id);
     if(panel){panel.setAttribute('role','tabpanel');panel.setAttribute('aria-labelledby',tab.id);}
   });
-  function mobile(){return document.documentElement.classList.contains('mobile-ui');}
+  function mobile(){return document.documentElement.classList.contains('mobile-ui')||document.body.classList.contains('directory-open');}
   function syncSection(){
     var panel=panels.find(function(p){return p.classList.contains('on');});
     if(!panel)return;
@@ -40,6 +50,13 @@
     select.value=next;
     position.textContent=String(tabs.findIndex(function(t){return t.dataset.trip===next;})+1).padStart(2,'0')+' / '+String(tabs.length).padStart(2,'0');
     description.textContent=descriptions[next]||'';
+    inlineTitle.textContent=sectionTitles[next]||tabs.find(function(t){return t.dataset.trip===next;}).textContent.trim();
+    inlineDescription.textContent=descriptions[next]||'';
+    var embedded=dialog.classList.contains('mx-inline-trip');
+    setAttr(dialog,'aria-labelledby',embedded?'mtInlineTitle':originalDialogLabel);
+    if(embedded)setAttr(dialog,'role','region');
+    else if(originalDialogRole)setAttr(dialog,'role',originalDialogRole);
+    else dialog.removeAttribute('role');
     panels.forEach(function(p){p.setAttribute('aria-hidden',String(p.id!==next));});
   }
   select.addEventListener('change',function(){
@@ -52,7 +69,7 @@
   dialog.addEventListener('click',function(e){if(e.target.closest('[data-trip]')&&current)scrollPositions[current]=data.scrollTop;},true);
   var panelObserver=new MutationObserver(syncSection);
   panels.forEach(function(p){panelObserver.observe(p,{attributes:true,attributeFilter:['class']});});
-  new MutationObserver(function(){if(dialog.open)syncSection();}).observe(dialog,{attributes:true,attributeFilter:['open']});
+  new MutationObserver(function(){if(dialog.open){syncSection();if(mobile()&&current)data.scrollTop=scrollPositions[current]||0;}}).observe(dialog,{attributes:true,attributeFilter:['open','class']});
 
   function setAttr(el,name,value){if(el.getAttribute(name)!==value)el.setAttribute(name,value);}
   function addSpan(parent,className,text){var s=parent.querySelector('.'+className);if(!s){s=document.createElement('span');s.className=className;parent.appendChild(s);}if(s.textContent!==text)s.textContent=text;return s;}
@@ -82,17 +99,22 @@
     var filter=document.getElementById('mtBookingPerson');
     if(!filter){
       var box=document.createElement('div');box.className='mt-booking-filter';
-      box.innerHTML='<label for="mtBookingPerson">Show bookings for</label><select id="mtBookingPerson" aria-label="Filter bookings by person"></select><p class="mt-booking-empty" id="mtBookingEmpty" hidden>No confirmed guests yet. Update Who’s in to start tracking bookings.</p>';
+      box.innerHTML='<label for="mtBookingPerson">Show bookings for</label><select id="mtBookingPerson" aria-label="Filter bookings by person" aria-describedby="mtBookingFilterScope"></select><small class="mt-filter-scope" id="mtBookingFilterScope">Your choice stays on this device.</small><p class="mt-booking-empty" id="mtBookingEmpty" hidden>No confirmed guests yet. Update Who’s in to start tracking bookings.</p>';
       table.parentElement.before(box);filter=box.querySelector('select');
-      filter.addEventListener('change',applyPersonFilter);
+      filter.addEventListener('change',function(){
+        preferredBookingPerson=filter.value;
+        try{localStorage.setItem(bookingPersonKey,preferredBookingPerson);}catch(e){}
+        applyPersonFilter();
+      });
     }
     var signature=JSON.stringify(names);
     if(filter.dataset.names!==signature){
-      var previous=filter.value;filter.replaceChildren();
+      var previous=filter.value||preferredBookingPerson;filter.replaceChildren();
       [''].concat(names).forEach(function(name){var o=document.createElement('option');o.value=name;o.textContent=name||'Everyone · '+names.length+(names.length===1?' person':' people');filter.appendChild(o);});
       filter.dataset.names=signature;filter.value=names.includes(previous)?previous:'';
     }
     document.getElementById('mtBookingEmpty').hidden=names.length>0;
+    var summary=document.getElementById('bkSummary');if(summary)summary.hidden=!names.length;
     applyPersonFilter();
   }
   function applyPersonFilter(){
